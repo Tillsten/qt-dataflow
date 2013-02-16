@@ -5,7 +5,7 @@ Created on Sat Feb 16 00:40:58 2013
 @author: UlMi
 """
 from __future__ import print_function
-from PySide.QtGui import *
+from PyQt4.QtGui import *
 from base import SchemaNode
 
 import numpy as np
@@ -30,7 +30,8 @@ class DataGenNode(SchemaNode):
         return num
 
     def show_widget(self):
-        w = DataW().edit()
+        w = DataW()
+        w.edit()
         self.min = w.mini
         self.max = w.maxi
         self.size = w.size
@@ -73,7 +74,9 @@ class PlotNode(SchemaNode):
 
         data = self.in_conn[0].get()
         fig = plt.figure()
-        fig.plot(data)
+        ax = fig.add_subplot(111)
+        ax.plot(data)
+        fig.show()
 
 
 
