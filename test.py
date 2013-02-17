@@ -41,3 +41,15 @@ def test_schema_connections():
     assert(schema.connections == [(n3, n2)])
     assert(n1.out_conn == [])
     assert(n2.in_conn == [n3])
+
+
+def test_pickle():
+    import StringIO
+    s = StringIO
+
+    schema = Schema()
+    n1 = Node()
+    n2 = Node()
+    n3 = Node()
+    import pickle
+    pickle.dumps(schema, s)

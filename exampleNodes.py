@@ -8,8 +8,6 @@ from base import Node
 
 import numpy as np
 import matplotlib.pylab as plt
-import guidata.dataset.datatypes as dt
-import guidata.dataset.dataitems as di
 
 
 class DataGenNode(Node):
@@ -22,19 +20,18 @@ class DataGenNode(Node):
         self.icon_path = 'icons/onebit_11.png'
         self.min = 0
         self.max = 1
-        self.size = 100
+        self.num_points = 100
         self.generates_output = True
 
     def get(self):
-        num = np.random.random(self.size) * (self.max - self.min) + self.min
+        num = np.random.random(self.num_points) * (self.max - self.min) + self.min
         return num
 
     def show_widget(self):
-        w = DataW()
-        w.edit()
-        self.min = w.mini
-        self.max = w.maxi
-        self.size = w.size
+        int, ok = QInputDialog.getInteger(None, 'Input Dialog',
+                                          'Number of Points', self.num_points)
+        if ok:
+            self.num_points = int
 
 
 class FilterNode(Node):
@@ -54,28 +51,8 @@ class FilterNode(Node):
         s = data.std()
         return np.where(np.abs(data - m) > s, m, data)
 
-    def show_widget(selfs):
+    def show_widget(self):
         pass
-
-#class DataGenWidget(QWidget):
-#    """
-#    Widget for DataGenNode
-#    """
-#    def __init__(self):
-#        super(DataGenWidget, self).__init__()
-#        lay = QVBoxLayout()
-#        self.setLayout(lay)
-#        tb_min = QSpinBox()
-#        tb_max = QSpinBox()
-#        tb_size = QLineEdit('Size')
-#        for i in [tb_min, tb_max, tb_size]:
-#            lay.addWidget(i)
-
-
-class DataW(dt.DataSet):
-    mini = di.FloatItem('Min', 0.)
-    maxi = di.FloatItem('Max.', 1.)
-    size = di.IntItem('Size', 50.)
 
 
 class PlotNode(Node):

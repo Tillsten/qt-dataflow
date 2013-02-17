@@ -10,12 +10,14 @@ class ToolBar(QGraphicsView):
     Toolbar which show the availeble nodes.
     """
     node_clicked = Signal(object)
+
     def __init__(self, parent):
         super(ToolBar, self).__init__(parent)
         self.nodes = []
         self.scene = QGraphicsScene()
         self.setRenderHint(QPainter.Antialiasing)
         self.setScene(self.scene)
+        self.setStyleSheet("background: transparent")
         self._bottom = 0
         self.setLayout(QHBoxLayout())
         size_pol = QSizePolicy(QSizePolicy.Minimum, QSizePolicy.Minimum)
@@ -30,6 +32,7 @@ class ToolBar(QGraphicsView):
         rep.setHandlesChildEvents(True)
         rect = (rep.childrenBoundingRect() | rep.boundingRect())
         self._bottom += rect.height() + 5
+        self.setSceneRect(self.scene.itemsBoundingRect().adjusted(-3, 0, 0, 0))
 
     def mousePressEvent(self, ev):
         super(ToolBar, self).mouseReleaseEvent(ev)
@@ -45,7 +48,9 @@ class ChartWindow(QWidget):
     def __init__(self, schema=None, parent=None):
         super(ChartWindow, self).__init__(parent)
         lay = QHBoxLayout()
+        self.setWindowTitle("qt-flowgraph")
         self.setLayout(lay)
+        self.setMinimumSize(800, 600)
         self.tb = ToolBar(self)
         self.view = QGraphicsView(self)
         self.view.setRenderHint(QPainter.Antialiasing)
@@ -56,6 +61,7 @@ class ChartWindow(QWidget):
 
         lay.addWidget(self.tb)
         lay.addWidget(self.view)
+
         self.tb.node_clicked.connect(self.schema.add_node)
 
 
