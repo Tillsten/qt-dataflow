@@ -19,7 +19,6 @@ but at the moment, the imports need to be manually changed.
 
 The example has additional requirements:
    * numpy
-   * guidata
    * matplotlib
 
 Usage
@@ -49,6 +48,7 @@ Todo
 * checking and introducing a connection type.
 * checking and improving compatibility with different Python versions.
 * automate detection of qt-toolkit.
+* signaling changes in nodes (optional?)
 * ...
 
 Coding Style
