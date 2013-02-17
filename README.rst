@@ -23,9 +23,12 @@ The example has additional requirements:
 
 Usage
 -----
-See example.py for an easy example.
+See example.py for an easy example using icons whic react to double click.
 
 .. image:: https://github.com/Tillsten/qt-dataflow/raw/master/example.png
+
+Example2 uses widgets directly, also uses callback to propagate changes.
+Warning, now circular dection yet.
 
 
 Structure
