@@ -200,9 +200,11 @@ if __name__ == '__main__':
 
     app = QApplication([])
     sch = Schema()
-    from nodes import DataGenNode, PlotNode
+    from nodes import DataGenNode, PlotNode, FilterNode
     d = DataGenNode(sch)
     p = PlotNode(sch)
+    f = FilterNode(sch)
+    sch.add_node(f)
     sch.add_node(d)
     sch.add_node(p)
     sv = SchemaView(sch)

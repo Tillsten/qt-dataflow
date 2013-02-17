@@ -36,6 +36,26 @@ class DataGenNode(SchemaNode):
         self.max = w.maxi
         self.size = w.size
 
+class FilterNode(SchemaNode):
+    """
+    Applies a simple on the data filter.
+    """
+    def __init__(self, schema):
+        super(FilterNode, self).__init__(schema)
+        self.accepts_input = True
+        self.generates_output = True
+
+    def get(self):
+        data = self.in_conn[0].get()
+        m = data.mean()
+        s = data.std()
+        return np.where(np.abs(data - m) > s, m, data)
+
+    def show_widget(selfs):
+        pass
+
+
+
 
 #class DataGenWidget(QWidget):
 #    """
