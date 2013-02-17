@@ -23,6 +23,7 @@ def test_schema_exception():
     schema.add_node(n1)
     schema.add_node(n1)
 
+
 def test_schema_connections():
     schema = Schema()
     n1 = Node()
@@ -41,4 +42,22 @@ def test_schema_connections():
     assert(schema.connections == [(n3, n2)])
     assert(n1.out_conn == [])
     assert(n2.in_conn == [n3])
+
+
+def test_schema_tofile():
+    from StringIO import StringIO
+
+    s = Schema()
+    n1 = Node()
+    n2 = Node()
+    s.add_node(n1)
+    s.add_node(n2)
+    s.connect_nodes(n1, n2)
+    f = StringIO()
+    s.to_disk(f)
+    f.seek(0)
+    s2 = Schema()
+    s2.from_disk(f)
+    assert(len(s.connections) == len(s2.connections))
+    assert(len(s.nodes) == len(s2.nodes))
 

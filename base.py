@@ -149,7 +149,6 @@ class Node(object):
     def accept_type(self, node):
         return True
 
-
 class Schema(QObject):
     """
     Model a Schema, which includes all Nodes and connections.
@@ -196,6 +195,19 @@ class Schema(QObject):
         out_node.out_conn.remove(in_node)
         in_node.in_conn.remove(out_node)
         self.connections.remove((out_node, in_node))
+
+    def to_disk(self, file):
+        import pickle
+        to_pickle = (self.nodes, self.connections)
+        return pickle.dump(to_pickle, file)
+
+    def from_disk(self, file):
+        import pickle
+        nodes, connections = pickle.load(file)
+        for n in nodes:
+            self.add_node(n)
+        for c in connections:
+            self.connect_nodes(*c)
 
 
 class SchemaView(QGraphicsScene):
@@ -301,4 +313,6 @@ class SchemaView(QGraphicsScene):
                 #Delete Nodes
                 if it in self.nodes_drawn.values():
                     self.schema.delete_node(it.node)
+
+
 
