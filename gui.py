@@ -14,6 +14,7 @@ class ToolBar(QGraphicsView):
         super(ToolBar, self).__init__(parent)
         self.nodes = []
         self.scene = QGraphicsScene()
+        self.setRenderHint(QPainter.Antialiasing)
         self.setScene(self.scene)
         self._bottom = 0
         self.setLayout(QHBoxLayout())
