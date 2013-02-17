@@ -10,7 +10,6 @@ class TerminalItem(QGraphicsEllipseItem):
     pass
 
 
-
 class NodeView(QGraphicsPixmapItem):
     """
     Class responsible for drawing and interaction of a Node.
@@ -89,6 +88,7 @@ class LinkLine(QGraphicsPathItem):
         self.setPath(path)
         super(LinkLine, self).paint(*args)
 
+
 class LinkNodesLine(LinkLine):
     """
     Visual representation for a connection between nodes.
@@ -137,8 +137,8 @@ class Node(object):
     """
     Logical Representation of a node.
     """
-    def __init__(self, schema):
-        self.schema = schema
+    def __init__(self):
+        #self.schema = schema
         self.node_type = 'BaseNode'
         self.accepts_input = False
         self.generates_output = False
@@ -156,7 +156,7 @@ class Schema(QObject):
     node_created = pyqtSignal(Node)
     node_deleted = pyqtSignal(Node)
     nodes_connected = pyqtSignal(list)
-    connection_deleted = pyqtSignal(list)
+    nodes_disconnected = pyqtSignal(list)
 
     def __init__(self):
         super(Schema, self).__init__()
@@ -165,13 +165,7 @@ class Schema(QObject):
 
     def add_node(self, node):
         self.nodes.append(node)
-        #Schema.node_connected()
-
-    def connect_nodes(self, out_node, in_node):
-        out_node.out_conn.append(in_node)
-        in_node.in_conn.append(out_node)
-        self.connections.append((out_node, in_node))
-        self.nodes_connected.emit([out_node, in_node])
+        self.node_created.emit(Node)
 
     def delete_node(self, node):
         self.nodes.remove(node)
@@ -183,10 +177,17 @@ class Schema(QObject):
             self.connection_deleted.emit(o, i)
             self.connections.remove((o, i))
 
+    def connect_nodes(self, out_node, in_node):
+        out_node.out_conn.append(in_node)
+        in_node.in_conn.append(out_node)
+        self.connections.append((out_node, in_node))
+        self.nodes_connected.emit([out_node, in_node])
 
-
-
-
+    def disconnect_nodes(self, out_node, in_node):
+        out_node.out_conn.remove(in_node)
+        in_node.in_conn.remove(out_node)
+        self.connections.remove((out_node, in_node))
+        self.nodes_disconnected.emit([out_node, in_node])
 
 class SchemaView(QGraphicsScene):
     """
@@ -199,9 +200,10 @@ class SchemaView(QGraphicsScene):
         self._pressed = None
         self.nodes_drawn = {}
         self.connections_drawn = {}
+        self.schema.node_created.connect(self.draw_schema)
         self.schema.nodes_connected.connect(self.add_link)
         self.schema.node_deleted.connect(self.remove_node)
-        self.schema.connection_deleted.connect(self.remove_link)
+        self.schema.nodes_disconnected.connect(self.remove_link)
 
     def draw_schema(self):
         i = 0

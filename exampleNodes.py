@@ -17,9 +17,9 @@ class DataGenNode(Node):
     """
     A test node which outputs a random number. Widget allow to set the number.
     """
-    def __init__(self, schema):
-        super(DataGenNode, self).__init__(schema)
-        self.node_type = 'DataGen'
+    def __init__(self):
+        super(DataGenNode, self).__init__()
+        self.node_type = 'Random Array'
         self.min = 0
         self.max = 1
         self.size = 100
@@ -36,14 +36,16 @@ class DataGenNode(Node):
         self.max = w.maxi
         self.size = w.size
 
+
 class FilterNode(Node):
     """
     Applies a simple on the data filter.
     """
-    def __init__(self, schema):
-        super(FilterNode, self).__init__(schema)
+    def __init__(self):
+        super(FilterNode, self).__init__()
         self.accepts_input = True
         self.generates_output = True
+        self.node_type = 'Filter'
 
     def get(self):
         data = self.in_conn[0].get()
@@ -82,10 +84,10 @@ class PlotNode(Node):
     """
     A test node to plot output from Datagen Node.
     """
-    def __init__(self, schema):
-        super(PlotNode, self).__init__(schema)
+    def __init__(self):
+        super(PlotNode, self).__init__()
         self.accepts_input = True
-        self.node_type = 'PlotNode'
+        self.node_type = 'Plotter'
 
     def show_widget(self):
         data = [i.get() for i in self.in_conn]
@@ -99,20 +101,13 @@ class PlotNode(Node):
 
 if __name__ == '__main__':
     from base import *
+    from gui import ChartWindow
     app = QApplication([])
-    sch = Schema()
-
-    d = DataGenNode(sch)
-    p = PlotNode(sch)
-    f = FilterNode(sch)
-    sch.add_node(f)
-    sch.add_node(d)
-    sch.add_node(p)
-    sv = SchemaView(sch)
-    vi = QGraphicsView()
-    vi.setScene(sv)
-    vi.setRenderHint(QPainter.Antialiasing)
-    vi.setRenderHint(QPainter.HighQualityAntialiasing)
-    sv.draw_schema()
-    vi.show()
+    app.setStyle('macos')
+    cw = ChartWindow()
+    cw.tb.add_node(FilterNode)
+    cw.tb.add_node(DataGenNode)
+    cw.tb.add_node(PlotNode)
+    cw.show()
     app.exec_()
+

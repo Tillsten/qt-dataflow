@@ -1,11 +1,15 @@
 __author__ = 'Tillsten'
 
 from PySide.QtGui import *
-
+from PySide.QtCore import Signal
 from base import SchemaView, Schema, NodeView
 
 
 class ToolBar(QGraphicsView):
+    """
+    Toolbar which show the availeble nodes.
+    """
+    node_clicked = Signal(object)
     def __init__(self, parent):
         super(ToolBar, self).__init__(parent)
         self.nodes = []
@@ -17,12 +21,24 @@ class ToolBar(QGraphicsView):
         self.setSizePolicy(size_pol)
 
     def add_node(self, node):
-        rep = NodeView(node(None))
+        rep = NodeView(node())
         self.scene.addItem(rep)
         rep.setPos(0., self._bottom)
         rep.setFlag(rep.ItemIsMovable, False)
-        rect = (rep.childrenBoundingRect()|rep.boundingRect())
+        rep.setFlag(rep.ItemIsSelectable, False)
+        rep.setHandlesChildEvents(True)
+        rect = (rep.childrenBoundingRect() | rep.boundingRect())
         self._bottom += rect.height() + 5
+
+    def mousePressEvent(self, ev):
+        super(ToolBar, self).mouseReleaseEvent(ev)
+        item = self.itemAt(ev.pos())
+        if item is not None:
+            if not hasattr(item, 'node'):
+                item = item.parentItem()
+            t = type(item.node)
+            self.node_clicked.emit(t())
+
 
 class ChartWindow(QWidget):
     def __init__(self, schema=None, parent=None):
@@ -30,25 +46,17 @@ class ChartWindow(QWidget):
         lay = QHBoxLayout()
         self.setLayout(lay)
         self.tb = ToolBar(self)
-        self.gv = QGraphicsView(self)
+        self.view = QGraphicsView(self)
+        self.view.setRenderHint(QPainter.Antialiasing)
+        self.view.setRenderHint(QPainter.HighQualityAntialiasing)
         self.schema = schema or Schema()
         self.sv = SchemaView(self.schema)
-        self.gv.setScene(self.sv)
+        self.view.setScene(self.sv)
+
         lay.addWidget(self.tb)
-        lay.addWidget(self.gv)
+        lay.addWidget(self.view)
+        self.tb.node_clicked.connect(self.schema.add_node)
 
-
-
-if __name__ == '__main__':
-    from exampleNodes import *
-
-    app = QApplication([])
-    cw = ChartWindow()
-    cw.tb.add_node(FilterNode)
-    cw.tb.add_node(DataGenNode)
-    cw.tb.add_node(PlotNode)
-    cw.show()
-    app.exec_()
 
 
 
