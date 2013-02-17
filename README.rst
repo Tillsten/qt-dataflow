@@ -23,21 +23,37 @@ The example has additional requirements:
 
 Usage
 -----
-See exampleNodes.py for an easy example.
+See example.py for an easy example.
 
 .. image:: https://github.com/Tillsten/qt-dataflow/raw/master/example.png
 
 
+Structure
+---------
+The logic is as follow: A schema contain nodes and connections between nodes.
+Nodes can accept inputs and/or provide an output.
+
+Everything containing the rendering and the gui interaction is in the
+corresponding SchemaView and NodeView classes. Almost all interaction is
+handled by SchemaView.
+
+The Gui contains some basic usage Widgets.
+
 Todo
 ----
-* Toolbar to allow inserting nodes
-* modifying and deleting existing connections.
-* deleting nodes
+* add different icons (simple)
+* nicer toolbar (drag-n-drop would be nice)
 * persistence
 * make an example with less requirements.
-* checking the connection type.
+* checking and introducing a connection type.
+* checking and improving compatibility with different Python versions.
+* automate detection of qt-toolkit.
 * ...
+
+Coding Style
+------------
+This projects tries to follow PEP8.
 
 License
 -------
-3-BSD, see license.txt
+BSD-3 clauses, see license.txt.
