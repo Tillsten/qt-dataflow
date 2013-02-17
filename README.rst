@@ -24,11 +24,12 @@ The example has additional requirements:
 Usage
 -----
 See example.py for an easy example using icons whic react to double click.
+Hold the mousebutton to connect node Termials (only out-> in is allowed).
 
 .. image:: https://github.com/Tillsten/qt-dataflow/raw/master/example.png
 
 Example2 uses widgets directly, also uses callback to propagate changes.
-Warning, now circular dection yet.
+Warning, there is no circular detection yet.
 
 
 Structure
@@ -56,7 +57,7 @@ Todo
 
 Coding Style
 ------------
-This projects tries to follow PEP8.
+This projects trys to follow PEP8.
 
 License
 -------
