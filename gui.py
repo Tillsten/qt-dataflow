@@ -1,8 +1,12 @@
 __author__ = 'Tillsten'
+try:
+    from PyQt4.QtGui import *
+    from PyQt4.QtCore import pyqtSignal
+    Signal = pyqtSignal
+except ImportError:
+    from PySide.QtGui import *
+    from PySide.QtCore import Signal
 
-from PyQt4.QtGui import *
-from PyQt4.QtCore import pyqtSignal
-Signal = pyqtSignal
 from view import SchemaView,  NodeView, PixmapNodeView
 from model import Schema
 

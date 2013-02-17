@@ -2,7 +2,11 @@ __author__ = 'Tillsten'
 
 from view import *
 from model import Node, Schema
-from PyQt4.QtGui  import *
+try:
+    from PyQt4.QtGui import *
+except ImportError:
+    from PySide.QtGui import *
+
 
 class SpinBoxNode(Node):
     def __init__(self):

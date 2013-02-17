@@ -1,5 +1,8 @@
-from PyQt4.QtCore import QObject, pyqtSignal
-Signal = pyqtSignal
+try:
+    from PyQt4.QtCore import QObject, pyqtSignal
+    Signal = pyqtSignal
+except ImportError:
+    from PySide.QtCore import QObject, Signal
 
 class Node(object):
     """

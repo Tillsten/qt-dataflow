@@ -1,13 +1,13 @@
 from __future__ import print_function
-from PyQt4.QtGui import QPixmap, QGraphicsItem, QGraphicsEllipseItem, \
-    QGraphicsPixmapItem, QGraphicsSimpleTextItem, QGraphicsColorizeEffect,\
-    QGraphicsPathItem, QPen, QPainterPath, QGraphicsScene, QGraphicsWidget, \
-    QGraphicsRectItem
+try:
+    from PyQt4.QtGui import *
+    from PyQt4.QtCore import QPointF, QRectF, pyqtSignal, Qt, QPoint
+    Signal = pyqtSignal
+except ImportError:
+    from PySide.QtGui import *
+    from PySide.QtCore import QPointF, QRectF, Signal, Qt, QPoint
 
 
-from PyQt4.QtGui import *
-from PyQt4.QtCore import QPointF, QRectF, pyqtSignal, Qt, QPoint
-Signal = pyqtSignal
 
 
 class TerminalItem(QGraphicsEllipseItem):
