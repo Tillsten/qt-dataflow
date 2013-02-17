@@ -57,6 +57,6 @@ This projects tries to follow PEP8.
 
 License
 -------
-Example icons are from http://www.icojam.com/blog/?p=177 (PD).
+Example icons are from http://www.icojam.com/blog/?p=177 (Public Domain).
 
-BSD-3 clauses, see license.txt.
+BSD - 3 clauses, see license.txt.
