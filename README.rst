@@ -25,7 +25,7 @@ Usage
 -----
 See exampleNodes.py for an easy example.
 
-.. image::https://github.com/Tillsten/qt-dataflow/raw/master/example.png
+.. image:: https://github.com/Tillsten/qt-dataflow/raw/master/example.png
 
 
 Todo
