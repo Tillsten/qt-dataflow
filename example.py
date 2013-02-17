@@ -44,15 +44,20 @@ class FilterNode(Node):
         self.generates_output = True
         self.node_type = 'Filter'
         self.icon_path = 'icons/onebit_31.png'
+        self.rel = 1.
 
     def get(self):
         data = self.in_conn[0].get()
         m = data.mean()
         s = data.std()
-        return np.where(np.abs(data - m) > s, m, data)
+        return np.where(np.abs(data - m) > self.rel * s, m, data)
 
     def show_widget(self):
-        pass
+        int, ok = QInputDialog.getDouble(None, 'Input Dialog',
+                                          'Number of Points', self.rel)
+        if ok:
+            self.sel = int
+
 
 
 class PlotNode(Node):
@@ -84,9 +89,9 @@ if __name__ == '__main__':
     cw.tb.add_node(PlotNode)
     f = FilterNode()
     d = DataGenNode()
-    cw.schema.add_node(f)
-    cw.schema.add_node(d)
-    cw.schema.connect_nodes(d, f)
+    # cw.schema.add_node(f)
+    # cw.schema.add_node(d)
+    # cw.schema.connect_nodes(d, f)
     cw.show()
     app.exec_()
 

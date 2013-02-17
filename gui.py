@@ -2,7 +2,7 @@ __author__ = 'Tillsten'
 
 from PySide.QtGui import *
 from PySide.QtCore import Signal
-from view import SchemaView,  NodeView
+from view import SchemaView,  NodeView, PixmapNodeView
 from model import Schema
 
 
@@ -25,7 +25,7 @@ class ToolBar(QGraphicsView):
         self.setSizePolicy(size_pol)
 
     def add_node(self, node):
-        rep = NodeView(node())
+        rep = PixmapNodeView(node())
         self.scene.addItem(rep)
         rep.setPos(0., self._bottom)
         rep.setFlag(rep.ItemIsMovable, False)
@@ -66,6 +66,14 @@ class ChartWindow(QWidget):
         self.tb.node_clicked.connect(self.schema.add_node)
 
 
+
+class SchemaApp(QMainWindow):
+    def __init__(self):
+        super(Schema, self).__init__()
+        cw = ChartWindow(self)
+        self.setCentralWidget(cw)
+        tb = self.addToolBar()
+        save_action = QAction('Save')
 
 
 

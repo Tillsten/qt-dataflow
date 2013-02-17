@@ -1,7 +1,9 @@
 from PySide.QtGui import QPixmap, QGraphicsItem, QGraphicsEllipseItem, \
     QGraphicsPixmapItem, QGraphicsSimpleTextItem, QGraphicsColorizeEffect,\
-    QGraphicsPathItem, QPen, QPainterPath, QGraphicsScene
+    QGraphicsPathItem, QPen, QPainterPath, QGraphicsScene, QGraphicsWidget
 
+
+from PySide.QtGui import *
 from PySide.QtCore import QPointF, QRectF, Signal, Qt
 
 
@@ -9,22 +11,19 @@ class TerminalItem(QGraphicsEllipseItem):
     pass
 
 
-class NodeView(QGraphicsPixmapItem):
+class NodeView(QGraphicsItem):
     """
     Class responsible for drawing and interaction of a Node.
     """
     def __init__(self, node, *args):
-        super(NodeView, self).__init__(*args)
+        #super(NodeView, self).__init__(*args)
         self.node = node
         self.setAcceptHoverEvents(True)
-        pixmap = QPixmap(node.icon_path)
         flags = [QGraphicsItem.ItemIsMovable,
                  QGraphicsItem.ItemIsSelectable]
         for f in flags:
             self.setFlag(f)
 
-        self.setPixmap(pixmap)
-        self.setScale(1.)
         self.setGraphicsEffect(None)
         self.add_label(node.node_type)
         self.add_terminals()
@@ -64,6 +63,31 @@ class NodeView(QGraphicsPixmapItem):
 
     def mouseDoubleClickEvent(self, *args, **kwargs):
         self.node.show_widget()
+
+
+class PixmapNodeView(QGraphicsPixmapItem, NodeView):
+    """
+    Node using a pixmap (icon).
+    """
+
+    def __init__(self, node, *args):
+        QGraphicsPixmapItem.__init__(self)
+        pixmap = QPixmap(node.icon_path)
+        self.setPixmap(pixmap)
+        self.setScale(1.)
+        NodeView.__init__(self, node, *args)
+
+
+class WidgetNodeView(QGraphicsWidget, NodeView):
+    """
+    Node using a full fledged widget.
+    """
+    def __init__(self, node):
+        QGraphicsWidget.__init__(self)
+
+        lay = node.get_layout()
+        self.setLayout(lay)
+
 
 
 class LinkLine(QGraphicsPathItem):
@@ -144,6 +168,7 @@ class SchemaView(QGraphicsScene):
         self.nodes_drawn = {}
         self.connections_drawn = {}
         self.connect_to_schema_sig()
+        self.myNodeView = PixmapNodeView
 
     def connect_to_schema_sig(self):
         self.schema.node_created.connect(self.draw_schema)
@@ -158,7 +183,7 @@ class SchemaView(QGraphicsScene):
         i = 0
         for n in self.schema.nodes:
             if n not in self.nodes_drawn:
-                it = NodeView(n)
+                it = self.myNodeView(n)
                 self.addItem(it)
                 self.nodes_drawn[n] = it
                 it.setPos(it.pos()+ i * QPointF(100., 0.))
