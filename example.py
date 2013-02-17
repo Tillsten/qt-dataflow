@@ -7,6 +7,8 @@ from PyQt4.QtGui import *
 from model import Node, Schema
 
 import numpy as np
+import matplotlib
+matplotlib.use('Qt4Agg')
 import matplotlib.pylab as plt
 
 

@@ -1,7 +1,8 @@
 from __future__ import print_function
 from PyQt4.QtGui import QPixmap, QGraphicsItem, QGraphicsEllipseItem, \
     QGraphicsPixmapItem, QGraphicsSimpleTextItem, QGraphicsColorizeEffect,\
-    QGraphicsPathItem, QPen, QPainterPath, QGraphicsScene, QGraphicsWidget
+    QGraphicsPathItem, QPen, QPainterPath, QGraphicsScene, QGraphicsWidget, \
+    QGraphicsRectItem
 
 
 from PyQt4.QtGui import *
@@ -80,13 +81,15 @@ class PixmapNodeView(QGraphicsPixmapItem, NodeView):
         NodeView.__init__(self, node, *args)
 
 
-class WidgetNodeView(QGraphicsProxyWidget, NodeView):
+class WidgetNodeView(QGraphicsRectItem, NodeView):
     """
     Node using a full fledged widget.
     """
     def __init__(self, node):
-        QGraphicsProxyWidget.__init__(self)
-        self.setWidget(node.get_widget())
+        QGraphicsRectItem.__init__(self, 0., 0., 70., 50.)
+        proxy = QGraphicsProxyWidget(self)
+        proxy.setWidget(node.get_widget())
+        proxy.setPos(15., 15.)
         NodeView.__init__(self, node)
 
 
@@ -237,7 +240,8 @@ class SchemaView(QGraphicsScene):
         if self._pressed:
             it = self.items(ev.scenePos())
             it = [i for i in it if hasattr(i, '_con')]
-            if len(it) > 0 and hasattr(it, '_con'):
+            it = it[0] if len(it) > 0  else  None
+            if hasattr(it, '_con'):
                 if it._con != self._start_con:
                     if it._con == 'in':
                         in_node = it.parentItem().node

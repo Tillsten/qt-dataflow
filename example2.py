@@ -1,6 +1,5 @@
 __author__ = 'Tillsten'
 
-from matplotlib.backend_bases import FigureCanvasBase
 from view import *
 from model import Node, Schema
 from PyQt4.QtGui  import *
@@ -12,7 +11,7 @@ class SpinBoxNode(Node):
         self.generates_output = True
         self.sb = QSpinBox()
         self.sb.setGeometry(0,0,50,25)
-        self.sb.changeEvent = self.signal_change()
+        self.sb.valueChanged.connect(self.signal_change)
 
     def get_widget(self):
         return self.sb
@@ -45,9 +44,11 @@ if __name__ == '__main__':
     sv = SchemaView(sch)
     sv.myNodeView = WidgetNodeView
     n = SpinBoxNode()
-    #n2 = SumLabelNode()
+    n2 = SpinBoxNode()
+    n3 = SumLabelNode()
     sch.add_node(n)
-    #sch.add_node(n2)
+    sch.add_node(n2)
+    sch.add_node(n3)
     gv = QGraphicsView(sv)
     gv.show()
 
