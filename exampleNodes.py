@@ -19,6 +19,7 @@ class DataGenNode(Node):
     def __init__(self):
         super(DataGenNode, self).__init__()
         self.node_type = 'Random Array'
+        self.icon_path = 'icons/onebit_11.png'
         self.min = 0
         self.max = 1
         self.size = 100
@@ -45,6 +46,7 @@ class FilterNode(Node):
         self.accepts_input = True
         self.generates_output = True
         self.node_type = 'Filter'
+        self.icon_path = 'icons/onebit_31.png'
 
     def get(self):
         data = self.in_conn[0].get()
@@ -84,6 +86,7 @@ class PlotNode(Node):
         super(PlotNode, self).__init__()
         self.accepts_input = True
         self.node_type = 'Plotter'
+        self.icon_path = 'icons/onebit_16.png'
 
     def show_widget(self):
         data = [i.get() for i in self.in_conn]

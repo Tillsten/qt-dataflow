@@ -16,14 +16,15 @@ class NodeView(QGraphicsPixmapItem):
     """
     def __init__(self, node, *args):
         super(NodeView, self).__init__(*args)
+        self.node = node
         self.setAcceptHoverEvents(True)
-        pixmap = QPixmap('flop.png')
+        pixmap = QPixmap(node.icon_path)
         flags = [QGraphicsItem.ItemIsMovable,
                  QGraphicsItem.ItemIsSelectable]
         for f in flags:
             self.setFlag(f)
 
-        self.node = node
+
         self.setPixmap(pixmap)
         self.setScale(1.)
         self.setGraphicsEffect(None)
