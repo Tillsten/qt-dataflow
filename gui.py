@@ -2,7 +2,8 @@ __author__ = 'Tillsten'
 
 from PySide.QtGui import *
 from PySide.QtCore import Signal
-from base import SchemaView, Schema, NodeView
+from view import SchemaView,  NodeView
+from model import Schema
 
 
 class ToolBar(QGraphicsView):

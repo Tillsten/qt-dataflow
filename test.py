@@ -1,6 +1,7 @@
 __author__ = 'Tillsten'
 from nose.tools import raises, assert_raises
-from base import Schema, Node
+from model import Schema, Node
+
 
 def test_schema():
     schema = Schema()

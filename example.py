@@ -4,7 +4,7 @@ Simple example. Has random generating Node, a filter node and a plotting node.
 """
 from __future__ import print_function
 from PySide.QtGui import *
-from base import Node
+from model import Node, Schema
 
 import numpy as np
 import matplotlib.pylab as plt
@@ -74,7 +74,7 @@ class PlotNode(Node):
         fig.show()
 
 if __name__ == '__main__':
-    from base import *
+    from view import *
     from gui import ChartWindow
     app = QApplication([])
     app.setStyle('macos')
