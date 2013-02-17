@@ -1,8 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-Created on Sat Feb 16 00:40:58 2013
-
-@author: UlMi
+Simple example. Has random generating Node, a filter node and a plotting node.
 """
 from __future__ import print_function
 from PySide.QtGui import *
@@ -12,6 +10,7 @@ import numpy as np
 import matplotlib.pylab as plt
 import guidata.dataset.datatypes as dt
 import guidata.dataset.dataitems as di
+
 
 class DataGenNode(Node):
     """
@@ -56,9 +55,6 @@ class FilterNode(Node):
     def show_widget(selfs):
         pass
 
-
-
-
 #class DataGenWidget(QWidget):
 #    """
 #    Widget for DataGenNode
@@ -96,8 +92,6 @@ class PlotNode(Node):
         for d in data:
             ax.plot(d)
         fig.show()
-
-
 
 if __name__ == '__main__':
     from base import *

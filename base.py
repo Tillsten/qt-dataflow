@@ -164,8 +164,11 @@ class Schema(QObject):
         self.connections = []
 
     def add_node(self, node):
-        self.nodes.append(node)
-        self.node_created.emit(Node)
+        if node not in self.nodes:
+            self.nodes.append(node)
+            self.node_created.emit(Node)
+        else:
+            raise ValueError('Node already in Schema.')
 
     def delete_node(self, node):
         to_delete = [(o, i) for (o, i) in self.connections
@@ -178,12 +181,16 @@ class Schema(QObject):
         self.node_deleted.emit(node)
 
     def connect_nodes(self, out_node, in_node):
+        if out_node is in_node:
+            raise ValueError("Node can't connect to itself")
         out_node.out_conn.append(in_node)
         in_node.in_conn.append(out_node)
         self.connections.append((out_node, in_node))
         self.nodes_connected.emit([out_node, in_node])
 
     def disconnect_nodes(self, out_node, in_node):
+        if (out_node, in_node) not in self.connections:
+            raise ValueError("Nodes are not connected")
         self.nodes_disconnected.emit([out_node, in_node])
         out_node.out_conn.remove(in_node)
         in_node.in_conn.remove(out_node)
