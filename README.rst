@@ -23,6 +23,8 @@ The example has additional requirements:
 
 Todo
 ----
+
+* Toolbar to allow inserting nodes
 * modifying and deleting existing connections.
 * deleting nodes
 * persistence

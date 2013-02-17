@@ -5,7 +5,7 @@ Created on Sat Feb 16 00:40:58 2013
 @author: UlMi
 """
 from __future__ import print_function
-from PyQt4.QtGui import *
+from PySide.QtGui import *
 from base import SchemaNode
 
 import numpy as np
@@ -101,7 +101,21 @@ class PlotNode(SchemaNode):
 
 
 if __name__ == '__main__':
+    from base import *
     app = QApplication([])
-    w = DataW()
+    sch = Schema()
 
+    d = DataGenNode(sch)
+    p = PlotNode(sch)
+    f = FilterNode(sch)
+    sch.add_node(f)
+    sch.add_node(d)
+    sch.add_node(p)
+    sv = SchemaView(sch)
+    vi = QGraphicsView()
+    vi.setScene(sv)
+    vi.setRenderHint(QPainter.Antialiasing)
+    vi.setRenderHint(QPainter.HighQualityAntialiasing)
+    sv.draw_schema()
+    vi.show()
     app.exec_()
