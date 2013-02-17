@@ -6,14 +6,14 @@ Created on Sat Feb 16 00:40:58 2013
 """
 from __future__ import print_function
 from PySide.QtGui import *
-from base import SchemaNode
+from base import Node
 
 import numpy as np
 import matplotlib.pylab as plt
 import guidata.dataset.datatypes as dt
 import guidata.dataset.dataitems as di
 
-class DataGenNode(SchemaNode):
+class DataGenNode(Node):
     """
     A test node which outputs a random number. Widget allow to set the number.
     """
@@ -36,7 +36,7 @@ class DataGenNode(SchemaNode):
         self.max = w.maxi
         self.size = w.size
 
-class FilterNode(SchemaNode):
+class FilterNode(Node):
     """
     Applies a simple on the data filter.
     """
@@ -78,7 +78,7 @@ class DataW(dt.DataSet):
     size = di.IntItem('Size', 50.)
 
 
-class PlotNode(SchemaNode):
+class PlotNode(Node):
     """
     A test node to plot output from Datagen Node.
     """
@@ -88,14 +88,11 @@ class PlotNode(SchemaNode):
         self.node_type = 'PlotNode'
 
     def show_widget(self):
-        if len(self.in_conn)!= 1:
-            print('Wrong number of inputs')
-            return
-
-        data = self.in_conn[0].get()
+        data = [i.get() for i in self.in_conn]
         fig = plt.figure()
         ax = fig.add_subplot(111)
-        ax.plot(data)
+        for d in data:
+            ax.plot(d)
         fig.show()
 
 

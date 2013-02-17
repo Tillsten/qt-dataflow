@@ -6,12 +6,12 @@ try:
 except NameError:
     pass
 
-
-
+class TerminalItem(QGraphicsEllipseItem):
+    pass
 
 class NodeView(QGraphicsPixmapItem):
     """
-    Class responisble for drawing and interaction of a Node.
+    Class responsible for drawing and interaction of a Node.
     """
     def __init__(self, node, *args):
         super(NodeView, self).__init__(*args)
@@ -35,7 +35,7 @@ class NodeView(QGraphicsPixmapItem):
         Adds terminals to the item.
         """
         if self.node.accepts_input:
-            term = QGraphicsEllipseItem(self)
+            term = TerminalItem(self)
             term.setRect(0, 0, 10, 10)
             pos = _get_left(self.boundingRect())
             pos += QPointF(-15., 0.)
@@ -44,7 +44,7 @@ class NodeView(QGraphicsPixmapItem):
             self.term_in = term
 
         if self.node.generates_output:
-            term = QGraphicsEllipseItem(self)
+            term = TerminalItem(self)
             term.setRect(0, 0, 10, 10)
             pos = _get_right(self.boundingRect())
             pos += QPointF(5., 0.)
@@ -96,6 +96,7 @@ class LinkNodesLine(LinkLine):
         super(LinkNodesLine, self).__init__()
         self.from_node = from_node
         self.to_node = to_node
+        self.setFlag(self.ItemIsSelectable)
 
 
     def paint(self, *args):
@@ -105,6 +106,9 @@ class LinkNodesLine(LinkLine):
 
 
 class TempLinkLine(LinkLine):
+    """
+    Line from node to end_pos
+    """
     def __init__(self, from_node, pos):
         super(TempLinkLine, self).__init__()
         self.from_node = from_node
@@ -115,20 +119,20 @@ class TempLinkLine(LinkLine):
         super(TempLinkLine, self).paint(*args)
 
 
-
-
 # Simple helper funcs to get points of a QRectF
 def _get_right(rect):
     return QPointF(rect.right(), rect.bottom() - rect.height() / 2.)
 
+
 def _get_left(rect):
     return QPointF(rect.left(), rect.bottom() - rect.height() / 2.)
+
 
 def _get_bot(rect):
     return QPointF(rect.left() + rect.width() / 2., rect.bottom())
 
 
-class SchemaNode(object):
+class Node(object):
     """
     Logical Representation of a node.
     """
@@ -145,10 +149,10 @@ class Schema(QObject):
     """
     Model a Schema, which includes all Nodes and connections.
     """
-    node_created = pyqtSignal(SchemaNode)
-    node_deleted = pyqtSignal(SchemaNode)
+    node_created = pyqtSignal(Node)
+    node_deleted = pyqtSignal(Node)
     nodes_connected = pyqtSignal(list)
-    node_disconnected = pyqtSignal(SchemaNode)
+    node_disconnected = pyqtSignal(Node)
 
     def __init__(self):
         super(Schema, self).__init__()
@@ -179,11 +183,14 @@ class SchemaView(QGraphicsScene):
         self.schema.nodes_connected.connect(self.add_link)
 
     def draw_schema(self):
+        i = 0
         for n in self.schema.nodes:
             if n not in self.nodes_drawn:
                 it = NodeView(n)
                 self.addItem(it)
                 self.nodes_drawn[n] = it
+                it.setPos(it.pos()+ i * QPointF(100., 0.))
+                i += 1
 
     def add_link(self, l):
         out_node, in_node = l
@@ -213,7 +220,9 @@ class SchemaView(QGraphicsScene):
     def mouseReleaseEvent(self, ev):
         super(SchemaView, self).mouseReleaseEvent(ev)
         if self._pressed:
-            it = self.itemAt(ev.scenePos())
+
+            it = self.items(ev.scenePos())
+            it = [i for i in it if hasattr(i, '_con')][0]
             if hasattr(it, '_con'):
                 if it._con != self._start_con:
                     if it._con == 'in':

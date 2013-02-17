@@ -21,14 +21,18 @@ The example has additional requirements:
    * guidata
    * matplotlib
 
+Usage
+-----
+See exampleNodes.py for an easy example.
+![My image](example.png)
+
+
 Todo
 ----
-
 * Toolbar to allow inserting nodes
 * modifying and deleting existing connections.
 * deleting nodes
 * persistence
-* show line while connecting.
 * make an example with less requirements.
 * checking the connection type.
 * ...
