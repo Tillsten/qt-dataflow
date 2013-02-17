@@ -9,6 +9,8 @@ except NameError:
 class TerminalItem(QGraphicsEllipseItem):
     pass
 
+
+
 class NodeView(QGraphicsPixmapItem):
     """
     Class responsible for drawing and interaction of a Node.
@@ -21,7 +23,6 @@ class NodeView(QGraphicsPixmapItem):
                  QGraphicsItem.ItemIsSelectable]
         for f in flags:
             self.setFlag(f)
-
 
         self.node = node
         self.setPixmap(pixmap)
@@ -144,6 +145,9 @@ class Node(object):
         self.out_conn = []
         self.in_conn = []
 
+    def accept_type(self, node):
+        return True
+
 
 class Schema(QObject):
     """
@@ -152,7 +156,7 @@ class Schema(QObject):
     node_created = pyqtSignal(Node)
     node_deleted = pyqtSignal(Node)
     nodes_connected = pyqtSignal(list)
-    node_disconnected = pyqtSignal(Node)
+    connection_deleted = pyqtSignal(list)
 
     def __init__(self):
         super(Schema, self).__init__()
@@ -169,6 +173,20 @@ class Schema(QObject):
         self.connections.append((out_node, in_node))
         self.nodes_connected.emit([out_node, in_node])
 
+    def delete_node(self, node):
+        self.nodes.remove(node)
+        self.node_deleted(node)
+        to_delete = [(o, i) for (o, i) in self.connections
+                     if o == node or i == node]
+
+        for o, i in to_delete:
+            self.connection_deleted.emit(o, i)
+            self.connections.remove((o, i))
+
+
+
+
+
 
 class SchemaView(QGraphicsScene):
     """
@@ -180,7 +198,10 @@ class SchemaView(QGraphicsScene):
         self.drawn_icons = []
         self._pressed = None
         self.nodes_drawn = {}
+        self.connections_drawn = {}
         self.schema.nodes_connected.connect(self.add_link)
+        self.schema.node_deleted.connect(self.remove_node)
+        self.schema.connection_deleted.connect(self.remove_link)
 
     def draw_schema(self):
         i = 0
@@ -199,6 +220,15 @@ class SchemaView(QGraphicsScene):
 
         ll = LinkNodesLine(in_it.term_in, out_it.term_out)
         self.addItem(ll)
+        self.connections_drawn[(out_it.node, in_it.node)] = ll
+
+    def remove_link(self, node_out, node_in):
+        ll = self.connections_drawn[(node_in, node_out)]
+        self.removeItem(ll)
+        self.connections_drawn[(node_in, node_out)] = None
+
+    def remove_node(self, node):
+        pass
 
     def mousePressEvent(self, ev):
         super(SchemaView, self).mousePressEvent(ev)
