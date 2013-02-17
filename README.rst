@@ -10,6 +10,7 @@ is given through simply adding or modifying Nodes.
 This project is inspired by Orange - where i did not see an easy way to just
 use the canvas part (also: license differences).
 
+
 Requirements
 ------------
 It is made with Python 2.7. Not tested for lower versions or
@@ -30,14 +31,14 @@ See example.py for an easy example.
 
 Structure
 ---------
-The logic is as follow: A schema contain nodes and connections between nodes.
+The logic is as follow: A schema contains all nodes and connections between nodes.
 Nodes can accept inputs and/or provide an output.
 
-Everything containing the rendering and the gui interaction is in the
-corresponding SchemaView and NodeView classes. Almost all interaction is
-handled by SchemaView.
+The rendering and the gui interaction is handled by the
+corresponding SchemaView and NodeView classes. The interaction is almost
+exclusively handled by by SchemaView.
 
-The Gui contains some basic usage Widgets.
+The gui module contains some basic usage widgets.
 
 Todo
 ----
