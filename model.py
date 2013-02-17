@@ -1,4 +1,5 @@
-from PySide.QtCore import QObject, Signal
+from PyQt4.QtCore import QObject, pyqtSignal
+Signal = pyqtSignal
 
 class Node(object):
     """
@@ -34,7 +35,7 @@ class Schema(QObject):
     def add_node(self, node):
         if node not in self.nodes:
             self.nodes.append(node)
-            self.node_created.emit(Node)
+            self.node_created.emit(node)
         else:
             raise ValueError('Node already in Schema.')
 

@@ -3,7 +3,7 @@
 Simple example. Has random generating Node, a filter node and a plotting node.
 """
 from __future__ import print_function
-from PySide.QtGui import *
+from PyQt4.QtGui import *
 from model import Node, Schema
 
 import numpy as np

@@ -1,10 +1,12 @@
-from PySide.QtGui import QPixmap, QGraphicsItem, QGraphicsEllipseItem, \
+from __future__ import print_function
+from PyQt4.QtGui import QPixmap, QGraphicsItem, QGraphicsEllipseItem, \
     QGraphicsPixmapItem, QGraphicsSimpleTextItem, QGraphicsColorizeEffect,\
     QGraphicsPathItem, QPen, QPainterPath, QGraphicsScene, QGraphicsWidget
 
 
-from PySide.QtGui import *
-from PySide.QtCore import QPointF, QRectF, Signal, Qt
+from PyQt4.QtGui import *
+from PyQt4.QtCore import QPointF, QRectF, pyqtSignal, Qt, QPoint
+Signal = pyqtSignal
 
 
 class TerminalItem(QGraphicsEllipseItem):
@@ -78,16 +80,14 @@ class PixmapNodeView(QGraphicsPixmapItem, NodeView):
         NodeView.__init__(self, node, *args)
 
 
-class WidgetNodeView(QGraphicsWidget, NodeView):
+class WidgetNodeView(QGraphicsProxyWidget, NodeView):
     """
     Node using a full fledged widget.
     """
     def __init__(self, node):
-        QGraphicsWidget.__init__(self)
-
-        lay = node.get_layout()
-        self.setLayout(lay)
-
+        QGraphicsProxyWidget.__init__(self)
+        self.setWidget(node.get_widget())
+        NodeView.__init__(self, node)
 
 
 class LinkLine(QGraphicsPathItem):
@@ -121,7 +121,6 @@ class LinkNodesLine(LinkLine):
         self.from_node = from_node
         self.to_node = to_node
         self.setFlag(self.ItemIsSelectable)
-
 
     def paint(self, *args):
         self.start_pos = self.from_node.sceneBoundingRect().center()
@@ -186,7 +185,9 @@ class SchemaView(QGraphicsScene):
                 it = self.myNodeView(n)
                 self.addItem(it)
                 self.nodes_drawn[n] = it
-                it.setPos(it.pos()+ i * QPointF(100., 0.))
+                offset = QPointF(100., 0.)
+                offset.setX(i * 100)
+                it.setPos(it.pos() + offset)
                 i += 1
 
     def add_link(self, nodes):
@@ -235,8 +236,8 @@ class SchemaView(QGraphicsScene):
         #If connecting, check if endpoint is ok and add connection.
         if self._pressed:
             it = self.items(ev.scenePos())
-            it = [i for i in it if hasattr(i, '_con')][0]
-            if hasattr(it, '_con'):
+            it = [i for i in it if hasattr(i, '_con')]
+            if len(it) > 0 and hasattr(it, '_con'):
                 if it._con != self._start_con:
                     if it._con == 'in':
                         in_node = it.parentItem().node
