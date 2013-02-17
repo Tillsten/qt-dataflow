@@ -108,6 +108,11 @@ if __name__ == '__main__':
     cw.tb.add_node(FilterNode)
     cw.tb.add_node(DataGenNode)
     cw.tb.add_node(PlotNode)
+    f = FilterNode()
+    d = DataGenNode()
+    cw.schema.add_node(f)
+    cw.schema.add_node(d)
+    cw.schema.connect_nodes(d, f)
     cw.show()
     app.exec_()
 

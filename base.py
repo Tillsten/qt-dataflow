@@ -168,14 +168,14 @@ class Schema(QObject):
         self.node_created.emit(Node)
 
     def delete_node(self, node):
-        self.nodes.remove(node)
-        self.node_deleted(node)
         to_delete = [(o, i) for (o, i) in self.connections
                      if o == node or i == node]
 
         for o, i in to_delete:
-            self.connection_deleted.emit(o, i)
-            self.connections.remove((o, i))
+            self.disconnect_nodes(o, i)
+
+        self.nodes.remove(node)
+        self.node_deleted.emit(node)
 
     def connect_nodes(self, out_node, in_node):
         out_node.out_conn.append(in_node)
@@ -184,10 +184,11 @@ class Schema(QObject):
         self.nodes_connected.emit([out_node, in_node])
 
     def disconnect_nodes(self, out_node, in_node):
+        self.nodes_disconnected.emit([out_node, in_node])
         out_node.out_conn.remove(in_node)
         in_node.in_conn.remove(out_node)
         self.connections.remove((out_node, in_node))
-        self.nodes_disconnected.emit([out_node, in_node])
+
 
 class SchemaView(QGraphicsScene):
     """
@@ -200,12 +201,18 @@ class SchemaView(QGraphicsScene):
         self._pressed = None
         self.nodes_drawn = {}
         self.connections_drawn = {}
+        self.connect_to_schema_sig()
+
+    def connect_to_schema_sig(self):
         self.schema.node_created.connect(self.draw_schema)
         self.schema.nodes_connected.connect(self.add_link)
         self.schema.node_deleted.connect(self.remove_node)
         self.schema.nodes_disconnected.connect(self.remove_link)
 
     def draw_schema(self):
+        """
+        Draw Nodes
+        """
         i = 0
         for n in self.schema.nodes:
             if n not in self.nodes_drawn:
@@ -215,27 +222,33 @@ class SchemaView(QGraphicsScene):
                 it.setPos(it.pos()+ i * QPointF(100., 0.))
                 i += 1
 
-    def add_link(self, l):
-        out_node, in_node = l
+    def add_link(self, nodes):
+        """
+        Adds connection between nodes.
+        """
+        out_node, in_node = nodes
         in_it = self.nodes_drawn[in_node]
         out_it = self.nodes_drawn[out_node]
 
-        ll = LinkNodesLine(in_it.term_in, out_it.term_out)
+        ll = LinkNodesLine(out_it.term_out, in_it.term_in)
         self.addItem(ll)
         self.connections_drawn[(out_it.node, in_it.node)] = ll
 
-    def remove_link(self, node_out, node_in):
-        ll = self.connections_drawn[(node_in, node_out)]
+    def remove_link(self, nodes):
+        """Remove connection from view"""
+        node_out, node_in = nodes
+        ll = self.connections_drawn.pop((node_out, node_in))
         self.removeItem(ll)
-        self.connections_drawn[(node_in, node_out)] = None
 
     def remove_node(self, node):
-        pass
+        """Remove node from view"""
+        self.removeItem(self.nodes_drawn[node])
+        self.nodes_drawn[node] = None
 
     def mousePressEvent(self, ev):
         super(SchemaView, self).mousePressEvent(ev)
         it = self.itemAt(ev.scenePos())
-
+        #Check if connection is started
         if hasattr(it, '_con'):
             self.temp_ll = TempLinkLine(it, ev.scenePos())
             self.addItem(self.temp_ll)
@@ -244,6 +257,7 @@ class SchemaView(QGraphicsScene):
             self._start_node = it.parentItem().node
 
     def mouseMoveEvent(self, ev):
+        #While connectiong, draw temp line
         super(SchemaView, self).mouseMoveEvent(ev)
         if self._pressed:
             self.temp_ll.end_pos = ev.scenePos()
@@ -251,8 +265,8 @@ class SchemaView(QGraphicsScene):
 
     def mouseReleaseEvent(self, ev):
         super(SchemaView, self).mouseReleaseEvent(ev)
+        #If connecting, check if endpoint is ok and add connection.
         if self._pressed:
-
             it = self.items(ev.scenePos())
             it = [i for i in it if hasattr(i, '_con')][0]
             if hasattr(it, '_con'):
@@ -267,5 +281,16 @@ class SchemaView(QGraphicsScene):
         self._pressed = False
         self._start_node = None
 
-
+    def keyPressEvent(self, ev):
+        super(SchemaView, self).keyPressEvent(ev)
+        # Delte canvas item
+        if ev.key() == Qt.Key_Delete and self.selectedItems() != []:
+            for it in self.selectedItems():
+                #Delete connections
+                if it in self.connections_drawn.values():
+                    self.schema.disconnect_nodes(it.from_node.parentItem().node,
+                                                 it.to_node.parentItem().node)
+                #Delete Nodes
+                if it in self.nodes_drawn.values():
+                    self.schema.delete_node(it.node)
 
