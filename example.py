@@ -90,7 +90,6 @@ if __name__ == '__main__':
     from view import *
     from gui import ChartWindow
     app = QApplication([])
-    app.setStyle('macos')
     cw = ChartWindow()
     cw.tb.add_node(FilterNode)
     cw.tb.add_node(DataGenNode)

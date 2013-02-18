@@ -70,13 +70,11 @@ class Schema(QObject):
 
     def to_disk(self, file):
         import pickle
-
         to_pickle = (self.nodes, self.connections)
         return pickle.dump(to_pickle, file)
 
     def from_disk(self, file):
         import pickle
-
         nodes, connections = pickle.load(file)
         for n in nodes:
             self.add_node(n)

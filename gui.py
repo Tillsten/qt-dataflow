@@ -56,7 +56,7 @@ class ChartWindow(QWidget):
         lay = QHBoxLayout()
         self.setWindowTitle("qt-flowgraph")
         self.setLayout(lay)
-        self.setMinimumSize(800, 600)
+        self.setMinimumSize(500, 300)
         self.tb = ToolBar(self)
         self.view = QGraphicsView(self)
         self.view.setRenderHint(QPainter.Antialiasing)
