@@ -58,7 +58,7 @@ class NodeView(QGraphicsItem):
         t.setPos(self.boundingRect().bottomLeft())
 
     def hoverEnterEvent(self, ev):
-        self.setGraphicsEffect(QGraphicsColorizeEffect())
+       # self.setGraphicsEffect(QGraphicsColorizeEffect())
         self.update()
 
     def hoverLeaveEvent(self, ev):
