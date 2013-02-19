@@ -51,7 +51,8 @@ class NodeView(QGraphicsItem):
             pos += QPointF(5., 0.)
             term.setPos(pos)
             term._con = 'out'
-            self.term_out = term
+            self.term_out = term    
+    
 
     def add_label(self, text):
         t = QGraphicsSimpleTextItem(text, self)
@@ -170,7 +171,7 @@ class SchemaView(QGraphicsScene):
         self.nodes_drawn = {}
         self.connections_drawn = {}
         self.connect_to_schema_sig()
-        self.myNodeView = PixmapNodeView
+        
 
     def connect_to_schema_sig(self):
         self.schema.node_created.connect(self.draw_schema)
@@ -185,7 +186,7 @@ class SchemaView(QGraphicsScene):
         i = 0
         for n in self.schema.nodes:
             if n not in self.nodes_drawn:
-                it = self.myNodeView(n)
+                it = n.get_view()
                 self.addItem(it)
                 self.nodes_drawn[n] = it
                 offset = QPointF(100., 0.)
@@ -215,6 +216,8 @@ class SchemaView(QGraphicsScene):
         """Remove node from view"""
         self.removeItem(self.nodes_drawn[node])
         self.nodes_drawn[node] = None
+        
+    #--------------------- Eventhandling after here -----------------
 
     def mousePressEvent(self, ev):
         super(SchemaView, self).mousePressEvent(ev)

@@ -19,6 +19,9 @@ class Node(object):
 
     def accept_type(self, node):
         return True
+        
+    def get_view(self):
+        raise NotImplemented
 
 
 class Schema(QObject):

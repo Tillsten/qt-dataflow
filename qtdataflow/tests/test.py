@@ -1,6 +1,6 @@
 __author__ = 'Tillsten'
 from nose.tools import raises, assert_raises
-from model import Schema, Node
+from qtdataflow.model import Schema, Node
 
 
 def test_schema():
@@ -47,7 +47,6 @@ def test_schema_connections():
 
 def test_schema_tofile():
     from StringIO import StringIO
-
     s = Schema()
     n1 = Node()
     n2 = Node()
@@ -61,4 +60,8 @@ def test_schema_tofile():
     s2.from_disk(f)
     assert(len(s.connections) == len(s2.connections))
     assert(len(s.nodes) == len(s2.nodes))
+    
+if __name__ == '__main__':
+    import nose
+    nose.run()
 

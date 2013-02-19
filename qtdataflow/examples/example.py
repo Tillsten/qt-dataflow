@@ -10,8 +10,8 @@ except ImportError:
     from PySide.QtGui import *
 
 
-from model import Node, Schema
-
+from qtdataflow.model import Node, Schema
+from qtdataflow.view import PixmapNodeView
 import numpy as np
 import matplotlib
 matplotlib.use('Qt4Agg')
@@ -29,7 +29,10 @@ class DataGenNode(Node):
         self.min = 0
         self.max = 1
         self.num_points = 100
-        self.generates_output = True
+        self.generates_output = True    
+        
+    def get_view(self):
+        return PixmapNodeView(self)  
 
     def get(self):
         num = np.random.random(self.num_points) * (self.max - self.min) + self.min
@@ -53,6 +56,9 @@ class FilterNode(Node):
         self.node_type = 'Filter'
         self.icon_path = 'icons/onebit_31.png'
         self.rel = 1.
+
+    def get_view(self):
+        return PixmapNodeView(self)
 
     def get(self):
         data = self.in_conn[0].get()
@@ -78,6 +84,9 @@ class PlotNode(Node):
         self.node_type = 'Plotter'
         self.icon_path = 'icons/onebit_16.png'
 
+    def get_view(self):
+        return PixmapNodeView(self)
+        
     def show_widget(self):
         data = [i.get() for i in self.in_conn]
         fig = plt.figure()
@@ -87,8 +96,8 @@ class PlotNode(Node):
         fig.show()
 
 if __name__ == '__main__':
-    from view import *
-    from gui import ChartWindow
+    
+    from qtdataflow.gui import ChartWindow
     app = QApplication([])
     cw = ChartWindow()
     cw.tb.add_node(FilterNode)
@@ -96,9 +105,6 @@ if __name__ == '__main__':
     cw.tb.add_node(PlotNode)
     f = FilterNode()
     d = DataGenNode()
-    # cw.schema.add_node(f)
-    # cw.schema.add_node(d)
-    # cw.schema.connect_nodes(d, f)
     cw.show()
     app.exec_()
 
