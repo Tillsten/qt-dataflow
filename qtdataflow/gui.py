@@ -1,11 +1,11 @@
 __author__ = 'Tillsten'
-try:
-    from PyQt4.QtGui import *
-    from PyQt4.QtCore import pyqtSignal
-    Signal = pyqtSignal
-except ImportError:
-    from PySide.QtGui import *
-    from PySide.QtCore import Signal
+# try:
+#     from PyQt4.QtGui import *
+#     from PyQt4.QtCore import pyqtSignal
+#     Signal = pyqtSignal
+#except ImportError:
+from PySide.QtGui import *
+from PySide.QtCore import Signal
 
 from view import SchemaView,  NodeView, PixmapNodeView
 from model import Schema
@@ -74,7 +74,7 @@ class ChartWindow(QWidget):
 
 class SchemaApp(QMainWindow):
     def __init__(self):
-        super(Schema, self).__init__()
+        super(SchemaApp, self).__init__()
         cw = ChartWindow(self)
         self.setCentralWidget(cw)
         tb = self.addToolBar()
@@ -87,4 +87,7 @@ class SchemaApp(QMainWindow):
 
 class SaveAction(QAction):
     def __init__(self):
+
         super(SaveAction, self).__init__()
+        self.setIconText(QStyle.SP_DialogSaveButton)
+        self.iconText('Save Schema')
