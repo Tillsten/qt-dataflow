@@ -1,8 +1,6 @@
-try:
-    from PyQt4.QtCore import QObject, pyqtSignal
-    Signal = pyqtSignal
-except ImportError:
-    from PySide.QtCore import QObject, Signal
+from qtdataflow.Qt import QtCore
+QObject = QtCore.QObject
+Signal = QtCore.Signal
 
 class Node(object):
     """
@@ -22,6 +20,9 @@ class Node(object):
 
     def get_view(self):
         raise NotImplemented
+
+    def get_toolbar_view(self):
+        return self.get_view()
 
     def connected_to_event(self, node):
         pass
@@ -65,6 +66,7 @@ class Schema(QObject):
             raise ValueError("Node can't connect to itself")
         out_node.out_conn.append(in_node)
         in_node.in_conn.append(out_node)
+
         self.connections.append((out_node, in_node))
         out_node.connected_from_event(in_node)
         in_node.connected_to_event(out_node)
