@@ -83,3 +83,8 @@ class SchemaApp(QMainWindow):
 
 
 
+
+
+class SaveAction(QAction):
+    def __init__(self):
+        super(SaveAction, self).__init__()

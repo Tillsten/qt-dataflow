@@ -19,10 +19,15 @@ class Node(object):
 
     def accept_type(self, node):
         return True
-        
+
     def get_view(self):
         raise NotImplemented
 
+    def connected_to_event(self, node):
+        pass
+
+    def connected_from_event(self, node):
+        pass
 
 class Schema(QObject):
     """
@@ -61,6 +66,8 @@ class Schema(QObject):
         out_node.out_conn.append(in_node)
         in_node.in_conn.append(out_node)
         self.connections.append((out_node, in_node))
+        out_node.connected_from_event(in_node)
+        in_node.connected_to_event(out_node)
         self.nodes_connected.emit([out_node, in_node])
 
     def disconnect_nodes(self, out_node, in_node):
