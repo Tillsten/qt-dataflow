@@ -19,16 +19,27 @@ class Node(object):
         return True
 
     def get_view(self):
+        """
+        Which view-class to use, has to return a QGraphicsItem
+        """
         raise NotImplemented
 
     def get_toolbar_view(self):
+        """
+        Which view-class is used in the Toolbar, defaults to
+        the standard view.
+        """
         return self.get_view()
 
-    def connected_to_event(self, node):
+    def new_connection_out(self, node):
+        """
+        Called if a new connection (out) was made.
+        """
         pass
 
-    def connected_from_event(self, node):
+    def new_connection_in(self, node):
         pass
+
 
 class Schema(QObject):
     """
@@ -68,8 +79,8 @@ class Schema(QObject):
         in_node.in_conn.append(out_node)
 
         self.connections.append((out_node, in_node))
-        out_node.connected_from_event(in_node)
-        in_node.connected_to_event(out_node)
+        out_node.new_connection_in(in_node)
+        in_node.new_connection_out(out_node)
         self.nodes_connected.emit([out_node, in_node])
 
     def disconnect_nodes(self, out_node, in_node):

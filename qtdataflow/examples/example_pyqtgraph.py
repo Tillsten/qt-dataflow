@@ -7,7 +7,7 @@ from pyqtgraph import PlotItem
 from qtdataflow.model import Node, Schema
 from qtdataflow.view import PixmapNodeView, NodeView
 from qtdataflow.Qt import QtCore, QtGui
-QtGui.QGraphicsItem.ItemIs
+
 import numpy as np
 
 
@@ -42,7 +42,7 @@ class PlotOnCanvasNode(Node):
     def update(self):
         self.plot.setData(self.in_conn[0].get())
 
-    def connected_to_event(self, node):
+    def new_connection_out(self, node):
         self.timer = QtCore.QTimer()
         self.timer.timeout.connect(self.update)
         self.timer.start(50.)
