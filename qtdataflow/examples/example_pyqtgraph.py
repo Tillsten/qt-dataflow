@@ -1,28 +1,56 @@
+import pyqtgraph
+
 __author__ = 'Tillsten'
 
 
 from pyqtgraph import PlotItem
 from qtdataflow.model import Node, Schema
 from qtdataflow.view import PixmapNodeView, NodeView
+from qtdataflow.Qt import QtCore, QtGui
+QtGui.QGraphicsItem.ItemIs
 import numpy as np
-import matplotlib
 
-matplotlib.use('Qt4Agg')
-import matplotlib.pylab as plt
+
 
 class PlotOnCanvasItem(NodeView, PlotItem):
     def __init__(self, Node):
         PlotItem.__init__(self)
+        self.setMinimumSize(300, 300)
         NodeView.__init__(self, Node)
 
 
 class PlotOnCanvasNode(Node):
     def __init__(self):
         super(PlotOnCanvasNode, self).__init__()
-
+        self.node_type = 'Plotter'
+        self.accepts_input = True
 
     def get_view(self):
-        return PlotOnCanvasItem(self)
+        p = PlotOnCanvasItem(self)
+        self.plot = p.plot()
+        self.plot.setPen(pyqtgraph.mkPen('r', lw=3))
+        return p
+
+    def get_toolbar_view(self):
+        self.icon_path = 'icons/onebit_31.png'
+        p = PixmapNodeView(self)
+        return p
+
+    def show_widget(self):
+        pass
+
+    def update(self):
+        self.plot.setData(self.in_conn[0].get())
+
+    def connected_to_event(self, node):
+        self.timer = QtCore.QTimer()
+        self.timer.timeout.connect(self.update)
+        self.timer.start(50.)
+
+
+
+from example import DataGenNode
+
 
 
 
@@ -33,5 +61,7 @@ if __name__ == '__main__':
     app = QApplication([])
     cw = ChartWindow()
     cw.tb.add_node(PlotOnCanvasNode)
+    cw.tb.add_node(DataGenNode)
+    cw.sv.sigRangeChanged = lambda x: x
     cw.show()
     app.exec_()
