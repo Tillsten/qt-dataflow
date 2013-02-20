@@ -1,8 +1,8 @@
 __author__ = 'Tillsten'
 
-from view import WidgetNodeView
+from view import WidgetNodeView, SchemaView
 from model import Node, Schema
-from qtdataflow.Qt.QtGui import QSpinBox, QApplication
+from qtdataflow.Qt.QtGui import QSpinBox, QApplication, QGraphicsView
 
 class SpinBoxNode(Node):
     def __init__(self):

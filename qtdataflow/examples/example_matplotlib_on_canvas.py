@@ -35,17 +35,18 @@ class DataGenNode(Node):
             self.num_points = int
 
 
-def make_plot(x, y):
+def make_plot(y):
     fig = plt.figure()
     ax = fig.add_subplot(111)
     fig.set_size_inches(4, 4)
-    ax.plot(x, y)
-    fig.savefig('tmp.png')
+    ax.plot(y)
+    fig.savefig('tmp.png', dpi=75)
 
 class MatplotlibNodeView(PixmapNodeView):
     def __init__(self, node):
         super(MatplotlibNodeView, self).__init__(node)
-        self.setPixmap('icons/onebit_11.png')
+        make_plot([0])
+        self.update_view()
 
     def update_view(self):
         self.setPixmap('tmp.png')
@@ -71,7 +72,7 @@ class MatplotlibNode(Node):
 
     def show_widget(self):
         a = self.in_conn[0].get()
-        make_plot(a, a)
+        make_plot(a)
         self.view.update_view()
 
 

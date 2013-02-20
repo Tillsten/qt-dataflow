@@ -70,7 +70,6 @@ class NodeView(object):
         self.setGraphicsEffect(None)
 
     def mouseDoubleClickEvent(self, *args, **kwargs):
-        print('jo')
         self.node.show_widget()
 
 
