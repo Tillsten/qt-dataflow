@@ -1,10 +1,3 @@
-# -*- coding: utf-8 -*-
-"""
-Created on Tue Feb 19 15:46:44 2013
-
-@author: tillsten
-"""
-
 ## Do all Qt imports from here to allow easier PyQt / PySide compatibility
 import sys, re
 

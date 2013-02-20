@@ -3,13 +3,6 @@
 Simple example. Has random generating Node, a filter node and a plotting node.
 """
 from __future__ import print_function
-
-try:
-    from PyQt4.QtGui import *
-except ImportError:
-    from PySide.QtGui import *
-
-
 from qtdataflow.model import Node, Schema
 from qtdataflow.view import PixmapNodeView
 import numpy as np
@@ -29,17 +22,17 @@ class DataGenNode(Node):
         self.min = 0
         self.max = 1
         self.num_points = 100
-        self.generates_output = True    
-        
+        self.generates_output = True
+
     def get_view(self):
-        return PixmapNodeView(self)  
+        return PixmapNodeView(self)
 
     def get(self):
         num = np.random.random(self.num_points) * (self.max - self.min) + self.min
         return num
 
     def show_widget(self):
-        int, ok = QInputDialog.getInteger(None, 'Input Dialog',
+        int, ok = Qt.QtGui.QInputDialog.getInteger(None, 'Input Dialog',
                                           'Number of Points', self.num_points)
         if ok:
             self.num_points = int
@@ -86,7 +79,7 @@ class PlotNode(Node):
 
     def get_view(self):
         return PixmapNodeView(self)
-        
+
     def show_widget(self):
         data = [i.get() for i in self.in_conn]
         fig = plt.figure()
@@ -96,9 +89,9 @@ class PlotNode(Node):
         fig.show()
 
 if __name__ == '__main__':
-    
+
     from qtdataflow.gui import ChartWindow
-    app = QApplication([])
+    app = Qt.QtGui.QApplication([])
     cw = ChartWindow()
     cw.tb.add_node(FilterNode)
     cw.tb.add_node(DataGenNode)

@@ -1,12 +1,8 @@
 __author__ = 'Tillsten'
 
-from view import *
+from view import WidgetNodeView
 from model import Node, Schema
-try:
-    from PyQt4.QtGui import *
-except ImportError:
-    from PySide.QtGui import *
-
+from qtdataflow.Qt.QtGui import QSpinBox, QApplication
 
 class SpinBoxNode(Node):
     def __init__(self):

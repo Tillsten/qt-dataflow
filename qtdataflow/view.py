@@ -1,29 +1,24 @@
 from __future__ import print_function
-try:
-    from PyQt4.QtGui import *
-    from PyQt4.QtCore import QPointF, QRectF, pyqtSignal, Qt, QPoint
-    Signal = pyqtSignal
-except ImportError:
-    from PySide.QtGui import *
-    from PySide.QtCore import QPointF, QRectF, Signal, Qt, QPoint
+from qtdataflow.Qt import QtCore, QtGui
+QRectF = QtCore.QRectF
+QPointF = QtCore.QPointF
 
-
-
-
-class TerminalItem(QGraphicsEllipseItem):
+class TerminalItem(QtGui.QGraphicsEllipseItem):
     pass
 
 
-class NodeView(QGraphicsItem):
+class NodeView(object):
     """
-    Class responsible for drawing and interaction of a Node.
+    Class responsible for drawing and interaction of a Node. Note that
+    your subclass has to be a subtype of QGraphicsItem. (only one qt
+    parent is allowed)
     """
     def __init__(self, node, *args):
         #super(NodeView, self).__init__(*args)
         self.node = node
         self.setAcceptHoverEvents(True)
-        flags = [QGraphicsItem.ItemIsMovable,
-                 QGraphicsItem.ItemIsSelectable]
+        flags = [QtGui.QGraphicsItem.ItemIsMovable,
+                 QtGui.QGraphicsItem.ItemIsSelectable]
         for f in flags:
             self.setFlag(f)
 
@@ -38,69 +33,81 @@ class NodeView(QGraphicsItem):
         if self.node.accepts_input:
             term = TerminalItem(self)
             term.setRect(0, 0, 10, 10)
-            pos = _get_left(self.boundingRect())
-            pos += QPointF(-15., 0.)
-            term.setPos(pos)
             term._con = 'in'
             self.term_in = term
 
         if self.node.generates_output:
             term = TerminalItem(self)
             term.setRect(0, 0, 10, 10)
-            pos = _get_right(self.boundingRect())
-            pos += QPointF(5., 0.)
-            term.setPos(pos)
             term._con = 'out'
-            self.term_out = term    
-    
+            self.term_out = term
+
+        self.layout_nodes()
+
+    def layout_nodes(self):
+        if hasattr(self, 'term_in'):
+            pos = _get_left(self.boundingRect())
+            pos += QtCore.QPointF(-15., 0.)
+            self.term_in.setPos(pos)
+
+        if hasattr(self, 'term_out'):
+            pos = _get_right(self.boundingRect())
+            pos += QtCore.QPointF(5., 0.)
+            self.term_out.setPos(pos)
+
+        if hasattr(self, 'label'):
+            self.label.setPos(self.boundingRect().bottomLeft())
 
     def add_label(self, text):
-        t = QGraphicsSimpleTextItem(text, self)
-        t.setPos(self.boundingRect().bottomLeft())
+        self.label = QtGui.QGraphicsSimpleTextItem(text, self)
+        self.label.setPos(self.boundingRect().bottomLeft())
 
     def hoverEnterEvent(self, ev):
-       # self.setGraphicsEffect(QGraphicsColorizeEffect())
-        self.update()
+        self.setGraphicsEffect(QtGui.QGraphicsColorizeEffect())
+
 
     def hoverLeaveEvent(self, ev):
         self.setGraphicsEffect(None)
 
     def mouseDoubleClickEvent(self, *args, **kwargs):
+        print('jo')
         self.node.show_widget()
 
 
-class PixmapNodeView(QGraphicsPixmapItem, NodeView):
+class PixmapNodeView(NodeView, QtGui.QGraphicsPixmapItem):
     """
     Node using a pixmap (icon).
     """
 
     def __init__(self, node, *args):
-        QGraphicsPixmapItem.__init__(self)
-        pixmap = QPixmap(node.icon_path)
+        QtGui.QGraphicsPixmapItem.__init__(self)
+        pixmap = QtGui.QPixmap(node.icon_path)
         self.setPixmap(pixmap)
         self.setScale(1.)
         NodeView.__init__(self, node, *args)
 
 
-class WidgetNodeView(QGraphicsRectItem, NodeView):
+
+
+class WidgetNodeView(NodeView, QtGui.QGraphicsRectItem):
     """
     Node using a full fledged widget.
     """
     def __init__(self, node):
-        QGraphicsRectItem.__init__(self, 0., 0., 70., 50.)
-        proxy = QGraphicsProxyWidget(self)
+        QtGui.QGraphicsRectItem.__init__(self, 0., 0., 70., 50.)
+        proxy = QtGui.QGraphicsProxyWidget(self)
         proxy.setWidget(node.get_widget())
         proxy.setPos(15., 15.)
         NodeView.__init__(self, node)
 
 
-class LinkLine(QGraphicsPathItem):
+class LinkLine(QtGui.QGraphicsPathItem):
     """
     Like Link line, but only one pos is a node.
     """
     def __init__(self):
         super(LinkLine, self).__init__()
-        self.pen = QPen()
+        self.pen = QtGui.QPen()
         self.pen.setWidth(3)
         self.setPen(self.pen)
 
@@ -108,7 +115,7 @@ class LinkLine(QGraphicsPathItem):
         start_pos = self.end_pos
         end_pos = self.start_pos
         path_rect = QRectF(start_pos, end_pos)
-        path = QPainterPath(path_rect.topLeft())
+        path = QtGui.QPainterPath(path_rect.topLeft())
         path.cubicTo(path_rect.topRight(),
                      path_rect.bottomLeft(),
                      path_rect.bottomRight())
@@ -159,7 +166,7 @@ def _get_bot(rect):
     return QPointF(rect.left() + rect.width() / 2., rect.bottom())
 
 
-class SchemaView(QGraphicsScene):
+class SchemaView(QtGui.QGraphicsScene):
     """
     The view of a Schema, manges GUI interaction.
     """
@@ -171,7 +178,7 @@ class SchemaView(QGraphicsScene):
         self.nodes_drawn = {}
         self.connections_drawn = {}
         self.connect_to_schema_sig()
-        
+
 
     def connect_to_schema_sig(self):
         self.schema.node_created.connect(self.draw_schema)
@@ -216,7 +223,7 @@ class SchemaView(QGraphicsScene):
         """Remove node from view"""
         self.removeItem(self.nodes_drawn[node])
         self.nodes_drawn[node] = None
-        
+
     #--------------------- Eventhandling after here -----------------
 
     def mousePressEvent(self, ev):
@@ -259,7 +266,7 @@ class SchemaView(QGraphicsScene):
     def keyPressEvent(self, ev):
         super(SchemaView, self).keyPressEvent(ev)
         # Delte canvas item
-        if ev.key() == Qt.Key_Delete and self.selectedItems() != []:
+        if ev.key() == QtCore.Qt.Key_Delete and self.selectedItems() != []:
             for it in self.selectedItems():
                 #Delete connections
                 if it in self.connections_drawn.values():
