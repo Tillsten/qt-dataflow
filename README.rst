@@ -22,19 +22,22 @@ It is made with Python 2.7. Not tested for lower versions or
 Python 3 (patches welcome). It should work with PySide and PyQt,
 but at the moment, the imports need to be manually changed.
 
-The examples have additional requirements:
+The examples may have additional requirements:
    * numpy
    * matplotlib
-   * pyqtgraph for the pyqtgraph example
+   * pyqtgraph
 
 Examples
 --------
-See example.py for an simple example using icons whic react to double click.
-Hold the mousebutton to connect node Termials (only out-> in is allowed).
+See example.py for an simple example using icons which react to double click.
+To make a connection draw from one nodes termial to another
+(only out-> in is allowed).
 
 .. image:: https://github.com/Tillsten/qt-dataflow/raw/master/example.png
 
-example_widget uses widgets on the canvas directly, it also show how to make
+example_widget uses widgets on the canvas directly, it also implements
+a simple callback. Note how the label updates after changing the
+SpinBox-value.
 
 example_pyqtgraph need also the pyqtgraph package. It plot directly on the
 canvas.
@@ -80,8 +83,8 @@ implements a Node which make a random number.
                 self.num_points = int
 
 
-A node has its connected nodes saved in node.in_conn and node.out_conn. Also
-note that each view must be a child of a QGraphicsItem and NodeView.
+A node saves its connections in node.in_conn and node.out_conn. Also
+note, that each node view must be a child of a QGraphicsItem and NodeView.
 
 
 Structure
