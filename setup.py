@@ -8,8 +8,9 @@ Created on Tue Feb 19 15:46:55 2013
 from distutils.core import setup
 
 setup(name='qt-dataflow',
-      version='0.2.1',
+      version='0.2.2',
       description='A base for custom visual programming enviroments',
+      long_description = open('README.rst', 'rt').read(),
       author='Till Stensitzki',
       author_email='tillsten@zedat.fu-berlin.de',
       url='https://github.com/Tillsten/qt-dataflow',
