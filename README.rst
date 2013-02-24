@@ -48,6 +48,7 @@ To make custom nodes you need to subclass Node. It must return
 a NodeView via its 'get_view' method. The following example
 implements a Node which make a random number.
 
+.. code-block:: python
 
     class RandomNumber(Node):
         """
@@ -79,29 +80,28 @@ implements a Node which make a random number.
                 self.num_points = int
 
 
+A node has its connected nodes saved in node.in_conn and node.out_conn. Also
+note that each view must be a child of a QGraphicsItem and NodeView.
 
 
 Structure
 ---------
-The logic is as follow: A schema contains all nodes and connections between nodes.
-Nodes can accept inputs and/or provide an output.
 
-The rendering and the gui interaction is handled by the
-corresponding SchemaView and NodeView classes. The interaction is almost
-exclusively handled by by SchemaView.
-
-The gui module contains some basic usage widgets.
+In model the base Node- and Schema-classes are found. In view are some
+view available. gui contains some additional ready to use elements.
 
 Todo
 ----
 * add different icons (simple)
 * nicer toolbar (drag-n-drop would be nice)
-* persistence
+* test persistence, define a stable protocol if pickling does not work
 * make an example with less requirements.
-* checking and introducing a connection type.
+* checking and introducing a connection type
+* move some logic for allowing or denying connections
+  from SchemaView to the NodeView.
 * checking and improving compatibility with different Python versions.
-* automate detection of qt-toolkit.
-* signaling changes in nodes (optional?)
+* better documentation
+* make number of terminals variable.
 * ...
 
 Coding Style
