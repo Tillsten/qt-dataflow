@@ -4,6 +4,7 @@
 
 *.pydevproject
 .project
+.spyderproject
 .metadata
 bin/
 tmp/
