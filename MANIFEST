@@ -11,7 +11,7 @@ qtdataflow\examples\example.py
 qtdataflow\examples\example_all_together.py
 qtdataflow\examples\example_matplotlib_on_canvas.py
 qtdataflow\examples\example_pyqtgraph.py
-qtdataflow\examples\example_widget_on_canvas.py
+qtdataflow\examples\example_widget.py
 qtdataflow\examples\icons\onebit_11.png
 qtdataflow\examples\icons\onebit_16.png
 qtdataflow\examples\icons\onebit_31.png

@@ -35,15 +35,15 @@ To make a connection draw from one nodes termial to another
 
 .. image:: https://github.com/Tillsten/qt-dataflow/raw/master/example.png
 
-example_widget uses widgets on the canvas directly, it also implements
-a simple callback. Note how the label updates after changing the
-SpinBox-value.
+*  example_widget uses widgets on the canvas directly, it also implements
+   a simple callback. Note how the label updates after changing the
+   SpinBox-value.
 
-example_pyqtgraph need also the pyqtgraph package. It plot directly on the
-canvas.
+*  example_pyqtgraph need also the pyqtgraph package. It plot directly on the
+   canvas.
 
-example_matplotlib_on_canvas does the same, but uses matplotlib via
-a temporary file.
+*  example_matplotlib_on_canvas does the same, but uses matplotlib via
+   a temporary file.
 
 Code Example
 ------------

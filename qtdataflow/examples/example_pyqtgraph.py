@@ -8,10 +8,6 @@ from qtdataflow.model import Node, Schema
 from qtdataflow.view import PixmapNodeView, NodeView
 from qtdataflow.Qt import QtCore, QtGui
 
-import numpy as np
-
-
-
 class PlotOnCanvasItem(NodeView, PlotItem):
     def __init__(self, Node):
         PlotItem.__init__(self)
@@ -22,7 +18,7 @@ class PlotOnCanvasItem(NodeView, PlotItem):
 class PlotOnCanvasNode(Node):
     def __init__(self):
         super(PlotOnCanvasNode, self).__init__()
-        self.node_type = 'Plotter'
+        self.node_type = 'pyqtgraph-Plotter'
         self.accepts_input = True
 
     def get_view(self):
@@ -32,7 +28,7 @@ class PlotOnCanvasNode(Node):
         return p
 
     def get_toolbar_view(self):
-        self.icon_path = 'icons/onebit_31.png'
+        self.icon_path = 'icons/onebit_16.png'
         p = PixmapNodeView(self)
         return p
 
@@ -48,20 +44,13 @@ class PlotOnCanvasNode(Node):
         self.timer.start(50.)
 
 
-
-from example import DataGenNode
-
-
-
-
-
 if __name__ == '__main__':
+    from example import DataGenNode
     from qtdataflow.gui import ChartWindow
     from PySide.QtGui import  QApplication
     app = QApplication([])
     cw = ChartWindow()
     cw.tb.add_node(PlotOnCanvasNode)
     cw.tb.add_node(DataGenNode)
-    cw.sv.sigRangeChanged = lambda x: x
     cw.show()
     app.exec_()

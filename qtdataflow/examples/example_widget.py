@@ -2,7 +2,10 @@ __author__ = 'Tillsten'
 
 from qtdataflow.view import WidgetNodeView, SchemaView
 from qtdataflow.model import Node, Schema
-from qtdataflow.Qt.QtGui import QSpinBox, QApplication, QGraphicsView
+from qtdataflow.Qt import QtGui
+QSpinBox = QtGui.QSpinBox
+QApplication = QtGui.QApplication
+QGraphicsView = QtGui.QGraphicsView
 
 class SpinBoxNode(Node):
     def __init__(self):
@@ -12,6 +15,9 @@ class SpinBoxNode(Node):
         self.sb = QSpinBox()
         self.sb.setGeometry(0,0,50,25)
         self.sb.valueChanged.connect(self.signal_change)
+
+    def get_view(self):
+        return WidgetNodeView(self)
 
     def get_widget(self):
         return self.sb
@@ -31,6 +37,9 @@ class SumLabelNode(Node):
         self.accepts_input = True
         self.lbl = QLabel()
 
+    def get_view(self):
+        return WidgetNodeView(self)
+
     def get_widget(self):
         return self.lbl
 
@@ -42,7 +51,6 @@ if __name__ == '__main__':
     app = QApplication([])
     sch = Schema()
     sv = SchemaView(sch)
-    sv.myNodeView = WidgetNodeView
     n = SpinBoxNode()
     n2 = SpinBoxNode()
     n3 = SumLabelNode()

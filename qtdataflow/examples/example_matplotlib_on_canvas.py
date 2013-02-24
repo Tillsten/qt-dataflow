@@ -61,7 +61,7 @@ class MatplotlibNode(Node):
         self.node_type = 'Matplotlib Image'
         self.accepts_input = True
         self.generates_output = False
-        self.icon_path = 'icons/onebit_11.png'
+        self.icon_path = 'icons/onebit_16.png'
 
     def get_view(self):
         self.view = MatplotlibNodeView(self)
