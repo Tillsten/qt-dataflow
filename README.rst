@@ -1,6 +1,8 @@
 ===========
 qt-dataflow
 ===========
+.. image:: https://github.com/Tillsten/qt-dataflow/raw/master/qt-dataflow-logo.png
+
 This package tries to provide components for building your own
 visual programming environment. The authors aim is to make his
 data analysis tool available to his colleagues who don't
@@ -114,5 +116,5 @@ This projects tries to follow PEP8.
 License
 -------
 Example icons are from http://www.icojam.com/blog/?p=177 (Public Domain).
-
+Qt.py from pyqtgraph
 BSD - 3 clauses, see license.txt.
