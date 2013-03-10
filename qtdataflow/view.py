@@ -4,7 +4,17 @@ QRectF = QtCore.QRectF
 QPointF = QtCore.QPointF
 
 class TerminalItem(QtGui.QGraphicsEllipseItem):
-    pass
+
+    def __init__(self):
+        super(TerminalItem).__init__(self)
+
+    def add_label(self, text):
+        self.label = QtGui.QGraphicsSimpleTextItem(text, self)
+        #self.label.align
+        #TODO make text left align for in, etc for out.
+        self.label.setPos(self.boundingRect().top())
+
+
 
 #TODO if multiterm node is finnished, it should be the baseclass
 class NodeView(object):
@@ -65,7 +75,6 @@ class NodeView(object):
     def hoverEnterEvent(self, ev):
         self.setGraphicsEffect(QtGui.QGraphicsColorizeEffect())
 
-
     def hoverLeaveEvent(self, ev):
         self.setGraphicsEffect(None)
 
@@ -92,16 +101,24 @@ class MultiTermNodeView(NodeView):
         Adds a single terminal to the view.
         """
         if io_type == 'out':
-            self.terms_out.append(name)
+            term = TerminalItem(self)
+            term.setRect(0, 0, 10, 10)
+            term._con = 'out'
+            self.terms_out.append((name, term))
+
         elif io_type == 'in':
-            self.terms_in.append(name)
+            term = TerminalItem(self)
+            term.setRect(0, 0, 10, 10)
+            term._con = 'in'
+            self.terms_in.append((name, term))
+
 
 
     def layout_nodes(self):
         n_out = len(self.terms_out)
         coords = _get_n_side(self.rect(), n_out, 'right')
 
-        for t in self.terms_out:
+        for name, t in self.terms_out:
 
             pass
 
@@ -120,8 +137,6 @@ class PixmapNodeView(NodeView, QtGui.QGraphicsPixmapItem):
         self.setPixmap(pixmap)
         self.setScale(1.)
         NodeView.__init__(self, node, *args)
-
-
 
 
 class WidgetNodeView(NodeView, QtGui.QGraphicsRectItem):
