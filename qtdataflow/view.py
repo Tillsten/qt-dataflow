@@ -84,17 +84,7 @@ class NodeView(object):
 
 class MultiTermNodeView(NodeView):
     def add_terminals(self):
-        if self.node.accepts_input:
-            term = TerminalItem(self)
-            term.setRect(0, 0, 10, 10)
-            term._con = 'in'
-            self.term_in = term
-
-        if self.node.generates_output:
-            term = TerminalItem(self)
-            term.setRect(0, 0, 10, 10)
-            term._con = 'out'
-            self.term_out = term
+        for t in self.
 
     def add_terminal(self, name, io_type):
         """
@@ -104,13 +94,13 @@ class MultiTermNodeView(NodeView):
             term = TerminalItem(self)
             term.setRect(0, 0, 10, 10)
             term._con = 'out'
-            self.terms_out.append((name, term))
+
 
         elif io_type == 'in':
             term = TerminalItem(self)
             term.setRect(0, 0, 10, 10)
             term._con = 'in'
-            self.terms_in.append((name, term))
+
 
 
 
