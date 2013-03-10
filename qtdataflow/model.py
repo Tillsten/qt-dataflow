@@ -2,6 +2,7 @@ from qtdataflow.Qt import QtCore
 QObject = QtCore.QObject
 Signal = QtCore.Signal
 
+
 class Node(object):
     """
     Logical Representation of a node.
@@ -41,6 +42,28 @@ class Node(object):
         pass
 
 
+class MultiTerminalNode(Node):
+    """
+    Node which can have more than one input/output Terminal.
+    """
+
+    def __init__(self):
+        Node.__init__(self)
+        self.input_terminals = {}
+        self.output_terminals = {}
+
+    @property
+    def accepts_input(self):
+        return len(self.input_terminals) > 0
+
+    @property
+    def generates_output(self):
+        return len(self.output_terminals) > 0
+
+
+
+
+
 class Schema(QObject):
     """
     Model a Schema, which includes all Nodes and connections.
@@ -56,6 +79,9 @@ class Schema(QObject):
         self.connections = []
 
     def add_node(self, node):
+        """
+        Add given Node to the Schema.
+        """
         if node not in self.nodes:
             self.nodes.append(node)
             self.node_created.emit(node)
@@ -63,6 +89,9 @@ class Schema(QObject):
             raise ValueError('Node already in Schema.')
 
     def delete_node(self, node):
+        """
+        Deletes given Node from the Schema, calls node_deleted event.
+        """
         to_delete = [(o, i) for (o, i) in self.connections
                      if o == node or i == node]
 

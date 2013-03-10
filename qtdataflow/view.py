@@ -6,7 +6,7 @@ QPointF = QtCore.QPointF
 class TerminalItem(QtGui.QGraphicsEllipseItem):
     pass
 
-
+#TODO if multiterm node is finnished, it should be the baseclass
 class NodeView(object):
     """
     Class responsible for drawing and interaction of a Node. Note that
@@ -71,6 +71,42 @@ class NodeView(object):
 
     def mouseDoubleClickEvent(self, *args, **kwargs):
         self.node.show_widget()
+
+
+class MultiTermNodeView(NodeView):
+    def add_terminals(self):
+        if self.node.accepts_input:
+            term = TerminalItem(self)
+            term.setRect(0, 0, 10, 10)
+            term._con = 'in'
+            self.term_in = term
+
+        if self.node.generates_output:
+            term = TerminalItem(self)
+            term.setRect(0, 0, 10, 10)
+            term._con = 'out'
+            self.term_out = term
+
+    def add_terminal(self, name, io_type):
+        """
+        Adds a single terminal to the view.
+        """
+        if io_type == 'out':
+            self.terms_out.append(name)
+        elif io_type == 'in':
+            self.terms_in.append(name)
+
+
+    def layout_nodes(self):
+        n_out = len(self.terms_out)
+        coords = _get_n_side(self.rect(), n_out, 'right')
+
+        for t in self.terms_out:
+
+            pass
+
+
+
 
 
 class PixmapNodeView(NodeView, QtGui.QGraphicsPixmapItem):
@@ -159,6 +195,19 @@ def _get_right(rect):
 
 def _get_left(rect):
     return QPointF(rect.left(), rect.bottom() - rect.height() / 2.)
+
+
+def _get_n_side(rect, n, side):
+    if side == 'left':
+        x = rect.left()
+    elif side == 'right':
+        x = rect.right()
+    part_h = rect.height() / (n + 1.)
+    points = []
+    for i in range(1, n + 1.):
+        p = QPointF(x, rect.bottom() - part_h * i)
+        points.append(p)
+    return points
 
 
 def _get_bot(rect):
