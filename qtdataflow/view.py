@@ -85,17 +85,17 @@ class NodeView(object):
 
 class MultiTermNodeView(NodeView):
     def add_terminals(self):
-        for t in self.terms_in:
+        for t in self.node.terms_in:
             self.add_terminal(t, 'in')
 
-        for t in self.terms_out:
+        for t in self.node.terms_out:
             self.add_terminal(t, 'out')
 
     def add_terminal(self, name, io_type):
         """
         Adds a single terminal to the view.
         """
-        assert(io_type in 'in', 'out')
+        assert(io_type in ['in', 'out'])
         term = TerminalItem(self)
         term.setRect(0, 0, 10, 10)
         term._con = io_type
@@ -103,14 +103,14 @@ class MultiTermNodeView(NodeView):
         self.term_dict[name] = term
 
     def layout_nodes(self):
-        n_out = len(self.terms_out)
+        n_out = len(self.node.terms_out)
         coords = _get_n_side(self.rect(), n_out, 'right')
-        for i, name in enumerate(self.terms_out):
+        for i, name in enumerate(self.node.terms_out):
             self.term_dict[name].setPos(coords[i])
 
-        n_out = len(self.terms_in)
+        n_out = len(self.node.terms_in)
         coords = _get_n_side(self.rect(), n_out, 'left')
-        for i, name in enumerate(self.terms_out):
+        for i, name in enumerate(self.node.terms_out):
             self.term_dict[name].setPos(coords[i])
 
 

@@ -5,16 +5,41 @@ Signal = QtCore.Signal
 
 class Node(object):
     """
-    Logical Representation of a node.
+    Node which can have more than one input/output Terminal.
+
+    The terminals a dict. Each entry symbolizes a terminal, where
+    the key is a string - the name - and the value is a list with the
+    connected nodes or terminals.
     """
 
     def __init__(self):
-        #self.schema = schema
-        self.node_type = 'BaseNode'
-        self.accepts_input = False
-        self.generates_output = False
-        self.out_conn = []
-        self.in_conn = []
+        Node.__init__(self)
+        self.terms_in = {}
+        self.terms_out = {}
+
+    @property
+    def accepts_input(self):
+        return len(self.terms_in) > 0
+
+    @property
+    def generates_output(self):
+        return len(self.terms_out) > 0
+
+    @property
+    def conns_in(self):
+        conns = []
+        for term, conns in self.terms_in:
+            for c in conns:
+                conns.append(term, c)
+        return conns
+
+    @property
+    def conns_out(self):
+        conns = []
+        for term, conns in self.terms_out:
+            for c in conns:
+                conns.append(term, c)
+        return conns
 
     def accept_type(self, node):
         return True
@@ -40,25 +65,6 @@ class Node(object):
 
     def new_connection_in(self, node):
         pass
-
-
-class MultiTerminalNode(Node):
-    """
-    Node which can have more than one input/output Terminal.
-    """
-
-    def __init__(self):
-        Node.__init__(self)
-        self.input_terminals = {}
-        self.output_terminals = {}
-
-    @property
-    def accepts_input(self):
-        return len(self.input_terminals) > 0
-
-    @property
-    def generates_output(self):
-        return len(self.output_terminals) > 0
 
 
 
