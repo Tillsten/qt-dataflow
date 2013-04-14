@@ -2,7 +2,7 @@ __author__ = 'Tillsten'
 
 from qtdataflow.view import WidgetNodeView, SchemaView
 from qtdataflow.model import Node, Schema
-from qtdataflow.Qt import QtGui
+from qtdataflow.qtpy import QtGui
 QSpinBox = QtGui.QSpinBox
 QApplication = QtGui.QApplication
 QGraphicsView = QtGui.QGraphicsView

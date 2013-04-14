@@ -91,7 +91,8 @@ class PlotNode(Node):
 if __name__ == '__main__':
 
     from qtdataflow.gui import ChartWindow
-    app = Qt.QtGui.QApplication([])
+    from qtdataflow.qtpy import QtGui
+    app = QtGui.QApplication([])
     cw = ChartWindow()
     cw.tb.add_node(FilterNode)
     cw.tb.add_node(DataGenNode)

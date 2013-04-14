@@ -78,7 +78,7 @@ class MatplotlibNode(Node):
 
 if __name__ == '__main__':
     from qtdataflow.gui import ChartWindow
-    from qtdataflow import Qt
+    from qtdataflow import qtpy as Qt
     app = Qt.QtGui.QApplication([])
     cw = ChartWindow()
     cw.tb.add_node(DataGenNode)

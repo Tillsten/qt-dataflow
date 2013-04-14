@@ -1,4 +1,4 @@
-from qtdataflow.Qt import QtCore
+from qtdataflow.qtpy import QtCore
 QObject = QtCore.QObject
 Signal = QtCore.Signal
 

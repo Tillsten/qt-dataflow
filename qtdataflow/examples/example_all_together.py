@@ -19,7 +19,7 @@ class VarDataGenNode(DataGenNode):
 
 if __name__ == '__main__':
     from qtdataflow.gui import ChartWindow
-    from qtdataflow.Qt import QtGui
+    from qtdataflow.qtpy import QtGui
 
     from example_matplotlib_on_canvas import MatplotlibNode
     from example_widget import SpinBoxNode

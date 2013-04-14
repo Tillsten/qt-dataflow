@@ -1,7 +1,7 @@
 __author__ = 'Tillsten'
 
-from qtdataflow.Qt import QtGui
-from qtdataflow.Qt import QtCore
+from qtdataflow.qtpy import QtGui
+from qtdataflow.qtpy import QtCore
 
 
 from view import SchemaView,  NodeView, PixmapNodeView
@@ -10,7 +10,7 @@ from model import Schema
 
 class ToolBar(QtGui.QGraphicsView):
     """
-    Toolbar which show the availeble nodes.
+    Toolbar which shows the availeble nodes.
     """
     node_clicked = QtCore.Signal(object)
 

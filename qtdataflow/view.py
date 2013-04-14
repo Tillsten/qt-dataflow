@@ -1,12 +1,13 @@
 from __future__ import print_function
-from qtdataflow.Qt import QtCore, QtGui
+from qtdataflow.qtpy import QtCore, QtGui
 QRectF = QtCore.QRectF
 QPointF = QtCore.QPointF
 
 class TerminalItem(QtGui.QGraphicsEllipseItem):
 
-    def __init__(self):
-        super(TerminalItem).__init__(self)
+    def __init__(self, node):
+        super(TerminalItem, self).__init__()
+        self.node = node
 
     def add_label(self, text):
         self.label = QtGui.QGraphicsSimpleTextItem(text, self)
@@ -277,7 +278,7 @@ class SchemaView(QtGui.QGraphicsScene):
         self.removeItem(self.nodes_drawn[node])
         self.nodes_drawn[node] = None
 
-    #--------------------- Eventhandling after here -----------------
+    #--------------------- Event handling after here -----------------
 
     def mousePressEvent(self, ev):
         super(SchemaView, self).mousePressEvent(ev)

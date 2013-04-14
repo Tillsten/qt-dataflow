@@ -6,7 +6,7 @@ __author__ = 'Tillsten'
 from pyqtgraph import PlotItem
 from qtdataflow.model import Node, Schema
 from qtdataflow.view import PixmapNodeView, NodeView
-from qtdataflow.Qt import QtCore, QtGui
+from qtdataflow.qtpy import QtCore, QtGui
 
 class PlotOnCanvasItem(NodeView, PlotItem):
     def __init__(self, Node):
@@ -47,7 +47,7 @@ class PlotOnCanvasNode(Node):
 if __name__ == '__main__':
     from example import DataGenNode
     from qtdataflow.gui import ChartWindow
-    from PySide.QtGui import  QApplication
+    from qtdataflow.qtpy.QtGui import  QApplication
     app = QApplication([])
     cw = ChartWindow()
     cw.tb.add_node(PlotOnCanvasNode)
